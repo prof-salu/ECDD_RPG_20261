@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93a7be7ef73b9b64ba7dec9912341889, type: 3}
   m_Name: EscudoTreinamento
   m_EditorClassIdentifier: Assembly-CSharp::DadosEquipamento
-  nomeDoItem: Espada de Treinamento
-  id: equip_espada_treinamento
+  nomeDoItem: Escudo de Treinamento
+  id: equip_escudo_treinamento
   icone: {fileID: 0}
-  descricao: Esapada de madeira para treinamento
+  descricao: Escudo de madeira para treinamento
   valorEmOuro: 10
   ehEmpilhavel: 0
   raridade: 0
-  bonusDeAtaque: 3
-  bonusDeDefesa: 0
+  bonusDeAtaque: 0
+  bonusDeDefesa: 2

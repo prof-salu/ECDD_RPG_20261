@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ca9bbb684b704a42b2be7b1382c03af, type: 3}
   m_Name: PocaoVida
   m_EditorClassIdentifier: Assembly-CSharp::DadosConsumivel
-  nomeDoItem: 
-  id: 
+  nomeDoItem: "Po\xE7\xE3o de Vida"
+  id: cons_pocao_vida
   icone: {fileID: 0}
-  descricao: 
-  valorEmOuro: 0
-  ehEmpilhavel: 0
+  descricao: Restaura instantaneamente 50 pontos de vida.
+  valorEmOuro: 2
+  ehEmpilhavel: 1
   raridade: 0
-  vidaParaRecuperar: 0
+  vidaParaRecuperar: 50
