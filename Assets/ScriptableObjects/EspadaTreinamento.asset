@@ -15,7 +15,7 @@ MonoBehaviour:
   nomeDoItem: Espada de Treinamento
   id: equip_espada_treinamento
   icone: {fileID: 0}
-  descricao: Esapada de madeira para treinamento
+  descricao: Espada de madeira para treinamento
   valorEmOuro: 10
   ehEmpilhavel: 0
   raridade: 0
