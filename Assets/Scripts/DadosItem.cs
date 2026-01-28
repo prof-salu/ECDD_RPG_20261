@@ -16,7 +16,4 @@ public class DadosItem : ScriptableObject
     [Header("Economia e Logistica")]
     public int valorEmOuro;
     public bool ehEmpilhavel;
-
-    [Header("Detalhes")]
-    public RaridadeItem raridade;
 }
