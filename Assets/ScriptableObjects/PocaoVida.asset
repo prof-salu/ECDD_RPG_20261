@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DadosConsumivel
   nomeDoItem: "Po\xE7\xE3o de Vida"
   id: item_pocao_vida
-  icone: {fileID: 0}
+  icone: {fileID: 21300000, guid: 9e0847f605aafd84c9847b1b3b8b8fb3, type: 3}
   descricao: Restaura 50 pontos de vida instantaneamente.
   valorEmOuro: 3
   ehEmpilhavel: 1
