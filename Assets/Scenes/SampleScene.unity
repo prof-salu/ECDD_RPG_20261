@@ -21231,6 +21231,9 @@ MonoBehaviour:
   - {fileID: 182341659}
   - {fileID: 1141699137}
   tempoDeEspera: 2
+  raioVisao: 5
+  raioPerseguicao: 5
+  distanciaAtaque: 1
 --- !u!1 &1101063856
 GameObject:
   m_ObjectHideFlags: 0
@@ -21430,6 +21433,9 @@ MonoBehaviour:
   - {fileID: 1691823942}
   - {fileID: 618826657}
   tempoDeEspera: 2
+  raioVisao: 4
+  raioPerseguicao: 6
+  distanciaAtaque: 1
 --- !u!1 &1102975517
 GameObject:
   m_ObjectHideFlags: 0
