@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ControladorInimigo : MonoBehaviour
 {
@@ -9,6 +11,10 @@ public class ControladorInimigo : MonoBehaviour
         Patrulha, // Andando
         Perseguicao   // Correndo atrás do player
     }
+
+    [Header("Combate")]
+    [Tooltip("Arraste os PREFABS dos inimigos da aba PROJECT para cá")]
+    public GameObject prefabDaArena; // Substitui a antiga string 'meuNomeID'
 
     [Header("IA do Inimigo")]
     public EstadoInimigo estadoAtual;
@@ -32,12 +38,22 @@ public class ControladorInimigo : MonoBehaviour
     private SpriteRenderer spriteRenderer; // Necessário para o Flip
     private Transform transformJogador;
 
+    private Rigidbody2D rb;
+    private Collider2D meuCollider;
+
+    // Variáveis para a ponte entre Update e FixedUpdate
+    private Vector2 destinoMovimento;
+    private float velocidadeAtual;
+    private bool estaSeMovendo = false;
 
 
     void Start()
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>(); // Pegando o componente visual
+        
+        rb = GetComponent<Rigidbody2D>();
+        meuCollider = GetComponent<Collider2D>();
 
         // --- BUSCA AUTOMÁTICA ---
         // Procura na cena um objeto com a etiqueta "Player"
@@ -55,6 +71,8 @@ public class ControladorInimigo : MonoBehaviour
 
     void Update()
     {
+        estaSeMovendo = false; // Reseta todo frame. Só fica true se chamarmos MoverFisico()
+
         // Segurança: Se o player morreu ou não foi encontrado, não faz nada
         if (transformJogador == null) return;
 
@@ -102,91 +120,77 @@ public class ControladorInimigo : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        // Aqui o motor de física trabalha (corre em sincronia com as colisões)
+        if (estaSeMovendo)
+        {
+            // NOTA: Usamos Time.fixedDeltaTime em vez de deltaTime!
+            Vector2 novaPosicao = Vector2.MoveTowards(rb.position, destinoMovimento, velocidadeAtual * Time.fixedDeltaTime);
+            rb.MovePosition(novaPosicao);
+        }
+    }
+
+    // Esta função agora apenas "prepara" o movimento e atualiza a animação
+    void MoverFisico(Vector3 destino, float velocidadeMovimento)
+    {
+        Vector3 direcao = (destino - transform.position).normalized;
+
+        // Animação e Flip (Processados no Update)
+        animator.SetBool("Andando", true);
+        animator.SetFloat("Horizontal", direcao.x);
+        animator.SetFloat("Vertical", direcao.y);
+
+        if (direcao.x < -0.1f) spriteRenderer.flipX = true;
+        else if (direcao.x > 0.1f) spriteRenderer.flipX = false;
+
+        // "Avisa" o FixedUpdate o que ele deve fazer
+        destinoMovimento = destino;
+        velocidadeAtual = velocidadeMovimento;
+        estaSeMovendo = true;
+    }
+
     void Patrulhar()
     {
+        // MODO FANTASMA: Permite atravessar paredes para não ficar preso ao voltar
+        if (meuCollider != null) meuCollider.isTrigger = true;
+
         Transform alvo = pontosDePatrulha[indicePontoAtual];
 
-        // 1. CHECAR DISTÂNCIA (Chegou no ponto?)
         if (Vector2.Distance(transform.position, alvo.position) < 0.1f)
         {
-            // --- LÓGICA DE ESPERA ---
-            // Cheguei! Paro a animação.
             animator.SetBool("Andando", false);
-
-            // Conto o tempo
             cronometroEspera += Time.deltaTime;
-
-            // Se o tempo passou do limite...
             if (cronometroEspera >= tempoDeEspera)
             {
-                // Reseta o timer
                 cronometroEspera = 0;
-                // Vai para o próximo ponto
                 indicePontoAtual++;
-
-                // Loop: Se chegou no último, volta para o zero
-                if (indicePontoAtual >= pontosDePatrulha.Length)
-                {
-                    indicePontoAtual = 0;
-                }
+                if (indicePontoAtual >= pontosDePatrulha.Length) indicePontoAtual = 0;
             }
         }
         else
         {
-            // --- LÓGICA DE MOVER ---
-            // Se não chegou, continua andando
-
-            // 2. CALCULAR A DIREÇÃO
-            Vector3 direcao = (alvo.position - transform.position).normalized;
-
-            // 3. ATUALIZAR O ANIMATOR
-            animator.SetBool("Andando", true);
-            animator.SetFloat("Horizontal", direcao.x);
-            animator.SetFloat("Vertical", direcao.y);
-
-            // 4. FLIP DO SPRITE
-            if (direcao.x < -0.1f) spriteRenderer.flipX = true;
-            else if (direcao.x > 0.1f) spriteRenderer.flipX = false;
-
-            // 5. MOVER
-            transform.position = Vector2.MoveTowards(transform.position, alvo.position, velocidade * Time.deltaTime);
+            MoverFisico(alvo.position, velocidade);
         }
     }
 
     void Perseguir()
     {
-        // 1. CALCULAR DIREÇÃO (Do Inimigo -> Para o Jogador)
-        Vector3 direcao = (transformJogador.position - transform.position).normalized;
+        // MODO SÓLIDO: Na perseguição, bate nas paredes
+        if (meuCollider != null) meuCollider.isTrigger = false;
 
-        // 2. ATUALIZAR ANIMATOR
-        // Reutilizamos a lógica das Blend Trees!
-        animator.SetBool("Andando", true);
-        animator.SetFloat("Horizontal", direcao.x);
-        animator.SetFloat("Vertical", direcao.y);
-
-        // 3. FLIP (Espelhamento do Sprite)
-        if (direcao.x < -0.1f) spriteRenderer.flipX = true;
-        else if (direcao.x > 0.1f) spriteRenderer.flipX = false;
-
-        // 4. MOVER (Um pouco mais rápido que a patrulha!)
-        // Multiplicamos por 1.5 para dar sensação de urgência
-        transform.position = Vector2.MoveTowards(transform.position, transformJogador.position, velocidade * 1.5f * Time.deltaTime);
+        MoverFisico(transformJogador.position, velocidade * 1.5f);
     }
 
     void IniciarCombate()
     {
-        // Por enquanto, apenas paramos o jogo para simular a entrada no turno
-        Debug.Log("COMBATE INICIADO! (Jogador capturado)");
+        // Cria uma lista vazia e adiciona apenas ELE MESMO para batalhas 1x1
+        DadosGlobais.prefabsInimigos = new List<GameObject>();
+        DadosGlobais.prefabsInimigos.Add(prefabDaArena);
 
-        // Congela o tempo do jogo (Pausa Total)
-        Time.timeScale = 0;
+        SceneManager.LoadScene("CenaBatalha");
 
-        // (Na semana 05 faremos a troca de cena real aqui)
     }
-
-
-
-
 
     // Este método desenha na Scene do Unity automaticamente (não aparece no jogo final)
     void OnDrawGizmosSelected()

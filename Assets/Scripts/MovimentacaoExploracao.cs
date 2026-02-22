@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MovimentoExploracao : MonoBehaviour
+public class MovimentacaoExploracao : MonoBehaviour
 {
     public float velocidade = 5f;
 
