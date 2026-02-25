@@ -14,6 +14,12 @@ public class MovimentacaoExploracao : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+
+        //Posição inicial do jogador
+        if (DadosGlobais.posicaoRetornoJogador != Vector2.zero)
+        {
+            transform.position = DadosGlobais.posicaoRetornoJogador;
+        }
     }
 
     void Update()

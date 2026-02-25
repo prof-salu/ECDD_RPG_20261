@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff7cd3cb79c51474687030b7d82f81ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GatilhoGuardiao
+  idUnico: 
   inimigosDesteGrupo:
   - {fileID: 6605982308862564196, guid: ea0f06eabc733aa4e9f0afe9debf8ed8, type: 3}
   - {fileID: 6605982308862564196, guid: ea0f06eabc733aa4e9f0afe9debf8ed8, type: 3}

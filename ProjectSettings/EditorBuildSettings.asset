@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CenaBatalha.unity
     guid: 7bb9567d96b20624f9c4f8c597d47b1f
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: e38404bd97872aa469f25651838fe065
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

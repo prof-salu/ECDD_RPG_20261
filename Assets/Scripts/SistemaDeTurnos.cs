@@ -1,12 +1,16 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-// Olha as "caixinhas" do desenho de vocês virando código aqui!
 public enum EstadoBatalha { Preparacao, TurnoJogador, TurnoInimigo, Vitoria, Derrota }
 
 public class SistemaDeTurnos : MonoBehaviour
 {
     public EstadoBatalha estadoAtual;
+
+    [Header("Lutadores na Arena")]
+    private AtributosCombate atributosHeroi;
+    private AtributosCombate atributosInimigo;
 
     void Start()
     {
@@ -19,24 +23,46 @@ public class SistemaDeTurnos : MonoBehaviour
         Debug.Log("Preparando a Batalha...");
         yield return new WaitForSeconds(1f);
 
-        // Setinha do fluxograma: Preparação -> Turno Jogador
+        // Encontra quem está na Arena usando Tags
+        atributosHeroi = GameObject.FindGameObjectWithTag("Player").GetComponent<AtributosCombate>();
+        atributosInimigo = GameObject.FindGameObjectWithTag("Inimigo").GetComponent<AtributosCombate>();
+
         estadoAtual = EstadoBatalha.TurnoJogador;
         IniciarTurnoJogador();
     }
 
     void IniciarTurnoJogador()
     {
-        Debug.Log("Sua vez, Herói! Pressione ESPAÇO para atacar.");
+        Debug.Log("A sua vez, Herói! Pressione ESPAÇO para atacar.");
     }
 
-    // --- TESTE DE FLUXO ---
     void Update()
     {
-        if (estadoAtual == EstadoBatalha.TurnoJogador && Input.GetKeyDown(KeyCode.Space))
+        switch (estadoAtual)
         {
-            Debug.Log("Jogador atacou o monstro!");
+            case EstadoBatalha.TurnoJogador:
 
-            // Setinha do fluxograma: Turno Jogador -> Turno Inimigo
+                // --- AÇÃO 1: ATAQUE BÁSICO ---
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Debug.Log("Herói atacou com fúria!");
+                    atributosInimigo.ReceberDano(atributosHeroi.danoBase);
+
+                    VerificarFimDeTurnoJogador(); // Consome o turno
+                }
+                break;
+        }
+    }
+
+    void VerificarFimDeTurnoJogador()
+    {
+        if (atributosInimigo.hpAtual <= 0)
+        {
+            estadoAtual = EstadoBatalha.Vitoria;
+            StartCoroutine(FinalizarBatalha(true));
+        }
+        else
+        {
             estadoAtual = EstadoBatalha.TurnoInimigo;
             StartCoroutine(TurnoDoInimigo());
         }
@@ -44,13 +70,41 @@ public class SistemaDeTurnos : MonoBehaviour
 
     IEnumerator TurnoDoInimigo()
     {
-        Debug.Log("Inimigos estão pensando...");
+        Debug.Log("Inimigo está pensando...");
         yield return new WaitForSeconds(2f);
 
-        Debug.Log("Inimigo atacou o herói!");
+        Debug.Log("O monstro atacou o Herói!");
+        atributosHeroi.ReceberDano(atributosInimigo.danoBase);
 
-        // Setinha do fluxograma: Turno Inimigo -> Turno Jogador
-        estadoAtual = EstadoBatalha.TurnoJogador;
-        IniciarTurnoJogador();
+        if (atributosHeroi.hpAtual <= 0)
+        {
+            estadoAtual = EstadoBatalha.Derrota;
+            StartCoroutine(FinalizarBatalha(false));
+        }
+        else
+        {
+            estadoAtual = EstadoBatalha.TurnoJogador;
+            IniciarTurnoJogador();
+        }
+    }
+
+    IEnumerator FinalizarBatalha(bool jogadorVenceu)
+    {
+        yield return new WaitForSeconds(2f); // Dá tempo para o jogador ler o aviso
+
+        if (jogadorVenceu)
+        {
+            Debug.Log("VITÓRIA! A regressar à exploração...");
+
+            // O CEMITÉRIO: Anota o ID do monstro para ele não voltar!
+            DadosGlobais.inimigosDerrotados.Add(DadosGlobais.idInimigoEmCombate);
+
+            SceneManager.LoadScene("Mundo");
+        }
+        else
+        {
+            Debug.Log("DERROTA... Fim de Jogo.");
+            SceneManager.LoadScene("GameOver");
+        }
     }
 }

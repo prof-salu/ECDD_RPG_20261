@@ -12,6 +12,10 @@ public class ControladorInimigo : MonoBehaviour
         Perseguicao   // Correndo atrás do player
     }
 
+    [Header("Combate e Identificação")]
+    [Tooltip("Dê um nome único. Ex: Lobo_Floresta_03")]
+    public string idUnico;
+
     [Header("Combate")]
     [Tooltip("Arraste os PREFABS dos inimigos da aba PROJECT para cá")]
     public GameObject prefabDaArena; // Substitui a antiga string 'meuNomeID'
@@ -66,6 +70,13 @@ public class ControladorInimigo : MonoBehaviour
         }
         // Configuração inicial dos pontos de patrulha (Container)
         estadoAtual = EstadoInimigo.Patrulha;
+
+        // Verifica se já foi derrotado antes de começar a patrulhar
+        if (DadosGlobais.inimigosDerrotados.Contains(idUnico))
+        {
+            gameObject.SetActive(false);
+            return;
+        }
 
     }
 
@@ -184,12 +195,14 @@ public class ControladorInimigo : MonoBehaviour
 
     void IniciarCombate()
     {
-        // Cria uma lista vazia e adiciona apenas ELE MESMO para batalhas 1x1
-        DadosGlobais.prefabsInimigos = new List<GameObject>();
-        DadosGlobais.prefabsInimigos.Add(prefabDaArena);
+        IniciadorBatalha iniciador = GetComponentInParent<IniciadorBatalha>();
 
-        SceneManager.LoadScene("CenaBatalha");
+        // Empacota o nosso único inimigo numa lista só para ele!
+        List<GameObject> listaInimigos = new List<GameObject>();
+        listaInimigos.Add(prefabDaArena);
 
+        if (iniciador != null)
+            iniciador.DispararBatalha(transformJogador.gameObject, idUnico, listaInimigos);
     }
 
     // Este método desenha na Scene do Unity automaticamente (não aparece no jogo final)

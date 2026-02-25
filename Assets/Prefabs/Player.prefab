@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7065153647297280753}
   - component: {fileID: 3885773608049294992}
   - component: {fileID: 4678689689469146021}
+  - component: {fileID: -4012831598870259983}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -194,3 +195,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovimentoExploracao
   velocidade: 5
+--- !u!114 &-4012831598870259983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8588602820616397113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e58bf5e06ae594ba9d0f71e591fb6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AtributosCombate
+  nomePersonagem: Player
+  hpMaximo: 100
+  hpAtual: 0
+  danoBase: 10

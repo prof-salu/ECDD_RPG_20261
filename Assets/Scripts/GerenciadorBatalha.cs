@@ -24,10 +24,6 @@ public class GerenciadorBatalha : MonoBehaviour
 
             // Instancia diretamente o prefab sem usar IFs!
             GameObject monstroCriado = Instantiate(grupoPrefabs[i], pontosInimigos[i].position, Quaternion.identity);
-
-            // Desliga a IA de exploração (pois agora estão na arena)
-            if (monstroCriado.GetComponent<ControladorInimigo>() != null)
-                monstroCriado.GetComponent<ControladorInimigo>().enabled = false;
         }
     }
 }
