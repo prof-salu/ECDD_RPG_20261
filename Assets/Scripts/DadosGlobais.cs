@@ -9,4 +9,6 @@ public static class DadosGlobais
     public static string idInimigoEmCombate;
     public static List<string> inimigosDerrotados = new List<string>(); // O Cemitério
     public static Vector2 posicaoRetornoJogador = Vector2.zero;         // O Checkpoint
+
+    public static int hpAtualJogador = -1;
 }
