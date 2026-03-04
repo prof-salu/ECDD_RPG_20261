@@ -32091,6 +32091,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1106398074606325156, guid: 76726e125c85b7a40bd7e44f473acb31, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1319373908531376410, guid: 76726e125c85b7a40bd7e44f473acb31, type: 3}
+      propertyPath: nivel
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1444161000062630249, guid: 76726e125c85b7a40bd7e44f473acb31, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9
@@ -32131,6 +32139,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3188714960535676476, guid: 76726e125c85b7a40bd7e44f473acb31, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3188714960535676476, guid: 76726e125c85b7a40bd7e44f473acb31, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5963499402789089611, guid: 76726e125c85b7a40bd7e44f473acb31, type: 3}
       propertyPath: m_Name
       value: Inimigo_Treant_Patrulha
@@ -32163,6 +32179,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 124757232393837541, guid: 2bae8f768964d6747b9a34d50a39cde3, type: 3}
+      propertyPath: nivel
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 531974047539910484, guid: 2bae8f768964d6747b9a34d50a39cde3, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 531974047539910484, guid: 2bae8f768964d6747b9a34d50a39cde3, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2442707643883795400, guid: 2bae8f768964d6747b9a34d50a39cde3, type: 3}
       propertyPath: m_Name
       value: Inimigo_Mole_Patrulha
@@ -32245,7 +32273,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -4012831598870259983, guid: 171315e24b7692646b29843a4d169771, type: 3}
       propertyPath: danoBase
-      value: 10
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 4402231078528329401, guid: 171315e24b7692646b29843a4d169771, type: 3}
       propertyPath: m_LocalPosition.x
@@ -32308,6 +32336,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1269351627459923563, guid: 2f0d8d49fd9648c47a84140ae0891246, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1269351627459923563, guid: 2f0d8d49fd9648c47a84140ae0891246, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2648235033325529524, guid: 2f0d8d49fd9648c47a84140ae0891246, type: 3}
       propertyPath: m_Name
       value: Inimigo_Mole_Guardiao
@@ -32332,9 +32368,25 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5083497030712412677, guid: 2f0d8d49fd9648c47a84140ae0891246, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5083497030712412677, guid: 2f0d8d49fd9648c47a84140ae0891246, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6063852707499357073, guid: 2f0d8d49fd9648c47a84140ae0891246, type: 3}
       propertyPath: idUnico
       value: 002
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998693172255844239, guid: 2f0d8d49fd9648c47a84140ae0891246, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998693172255844239, guid: 2f0d8d49fd9648c47a84140ae0891246, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8893681003304649107, guid: 2f0d8d49fd9648c47a84140ae0891246, type: 3}
       propertyPath: m_LocalPosition.x
@@ -32436,9 +32488,37 @@ PrefabInstance:
       propertyPath: idUnico
       value: 001
       objectReference: {fileID: 0}
+    - target: {fileID: 6737856458125605507, guid: 51841960b48332640954c1f92fe39845, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860745134660141213, guid: 51841960b48332640954c1f92fe39845, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860745134660141213, guid: 51841960b48332640954c1f92fe39845, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8898674959758718441, guid: 51841960b48332640954c1f92fe39845, type: 3}
       propertyPath: m_Name
       value: Inimigo_Treant_Guardiao
+      objectReference: {fileID: 0}
+    - target: {fileID: 8967571731489879521, guid: 51841960b48332640954c1f92fe39845, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8967571731489879521, guid: 51841960b48332640954c1f92fe39845, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9123040280512041243, guid: 51841960b48332640954c1f92fe39845, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9123040280512041243, guid: 51841960b48332640954c1f92fe39845, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

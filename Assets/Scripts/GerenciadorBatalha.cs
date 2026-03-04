@@ -16,14 +16,24 @@ public class GerenciadorBatalha : MonoBehaviour
             heroi.GetComponent<MovimentacaoExploracao>().enabled = false;
 
         // 2. Cria os inimigos automaticamente
-        List<GameObject> grupoPrefabs = DadosGlobais.prefabsInimigos;
-
-        for (int i = 0; i < grupoPrefabs.Count; i++)
+        for (int i = 0; i < DadosGlobais.prefabsInimigos.Count; i++)
         {
             if (i >= pontosInimigos.Length) break;
 
-            // Instancia diretamente o prefab sem usar IFs!
-            GameObject monstroCriado = Instantiate(grupoPrefabs[i], pontosInimigos[i].position, Quaternion.identity);
+            GameObject monstroCriado = Instantiate(DadosGlobais.prefabsInimigos[i], pontosInimigos[i].position, Quaternion.identity);
+
+            // A INJEÇÃO DE DADOS: Pega a lista do DadosGlobais e aplica no monstro
+            AtributosCombate atributos = monstroCriado.GetComponent<AtributosCombate>();
+            if (atributos != null && i < DadosGlobais.niveisInimigosParaArena.Count)
+            {
+                atributos.nivel = DadosGlobais.niveisInimigosParaArena[i];
+
+                // Força o monstro a recalcular a sua força imediatamente com o novo nível
+                atributos.CalcularStatus();
+
+                atributos.hpAtual = atributos.hpMaximo;
+            }
+
         }
     }
 }

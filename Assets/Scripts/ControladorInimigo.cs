@@ -197,12 +197,16 @@ public class ControladorInimigo : MonoBehaviour
     {
         IniciadorBatalha iniciador = GetComponentInParent<IniciadorBatalha>();
 
-        // Empacota o nosso único inimigo numa lista só para ele!
-        List<GameObject> listaInimigos = new List<GameObject>();
-        listaInimigos.Add(prefabDaArena);
+        // O EXTRATOR MÁGICO 1: Lê o nível do próprio AtributosCombate na cena!
+        AtributosCombate meusAtributos = GetComponent<AtributosCombate>();
+        int meuNivelCena = (meusAtributos != null) ? meusAtributos.nivel : 1;
 
         if (iniciador != null)
-            iniciador.DispararBatalha(transformJogador.gameObject, idUnico, listaInimigos);
+        {
+            iniciador.DispararBatalha(transformJogador.gameObject, idUnico,
+                new List<GameObject> { prefabDaArena },
+                new List<int> { meuNivelCena });
+        }
     }
 
     // Este método desenha na Scene do Unity automaticamente (não aparece no jogo final)

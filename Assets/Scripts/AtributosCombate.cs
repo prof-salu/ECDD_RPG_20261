@@ -4,23 +4,45 @@ using UnityEngine.UI;
 public class AtributosCombate : MonoBehaviour
 {
     public string nomePersonagem;
-    public int hpMaximo = 100;
-    public int hpAtual;
+    
+    [Header("Nível do Personagem")]
+    [Tooltip("Herói começa no 1. Para inimigos, defina a dificuldade manual!")]
+    public int nivel = 1; 
+
+    [Header("Status Base (No Nível 1)")]
+    public int hpBase = 100;
     public int danoBase = 10;
+    
+    [Header("Status Calculados (Não Mexer)")]
+    public int hpMaximo;
+    public int hpAtual;
+    public int danoAtual;
 
     [Header("UI")]
     public Slider minhaBarraDeVida;
 
+
     void Start() 
-    { 
-        hpAtual = hpMaximo;
+    {
+        CalcularStatus();
+
+        if (gameObject.CompareTag("Player") && DadosGlobais.hpAtualJogador != -1)
+        {
+            hpAtual = DadosGlobais.hpAtualJogador;
+        }
+        else
+        {
+            hpAtual = hpMaximo; // Nasce com vida cheia (Inimigos ou início de jogo)
+        }
+
         AtualizarBarra();
+
     }
 
     public void ReceberDano(int valorDano)
     {
         hpAtual -= valorDano;
-        AtualizarBarra();
+        
         Debug.Log(nomePersonagem + " recebeu " + valorDano + " de dano! HP: " + hpAtual);
 
         if (hpAtual <= 0)
@@ -28,6 +50,8 @@ public class AtributosCombate : MonoBehaviour
             hpAtual = 0;
             gameObject.SetActive(false);
         }
+
+        AtualizarBarra();
     }
 
     public void Curar(int valorCura)
@@ -49,5 +73,15 @@ public class AtributosCombate : MonoBehaviour
             minhaBarraDeVida.maxValue = hpMaximo;
             minhaBarraDeVida.value = hpAtual;
         }
+    }
+
+    public void CalcularStatus()
+    {
+        // A matemática da evolução: Ganha +20 HP e +5 Dano por cada nível extra!
+        hpMaximo = hpBase + ((nivel - 1) * 20);
+        danoAtual = danoBase + ((nivel - 1) * 5);
+
+        if (hpAtual > hpMaximo) hpAtual = hpMaximo;
+
     }
 }

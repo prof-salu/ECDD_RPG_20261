@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3885773608049294992}
   - component: {fileID: 4678689689469146021}
   - component: {fileID: -4012831598870259983}
+  - component: {fileID: 8377170894465789161}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -208,6 +209,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AtributosCombate
   nomePersonagem: Player
+  nivel: 1
+  hpBase: 100
+  danoBase: 10
+  bonusHpPorNivel: 20
+  bonusDanoPorNivel: 5
   hpMaximo: 100
   hpAtual: 0
-  danoBase: 10
+  danoAtual: 0
+  minhaBarraDeVida: {fileID: 0}
+--- !u!114 &8377170894465789161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8588602820616397113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ff0cb464707a564384f262ecb9b8ffd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProgressoJogador
+  xpAtual: 0
+  xpNecessariaPorNivel: 64000000fa000000f4010000e803000088130000

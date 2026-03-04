@@ -391,6 +391,7 @@ GameObject:
   - component: {fileID: 5491984533442730909}
   - component: {fileID: 467711510575658515}
   - component: {fileID: -3667129284333353816}
+  - component: {fileID: -6985849149526172196}
   m_Layer: 0
   m_Name: Inimigo_Treant
   m_TagString: Inimigo
@@ -572,7 +573,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AtributosCombate
   nomePersonagem: 
+  nivel: 1
+  hpBase: 100
+  danoBase: 10
   hpMaximo: 100
   hpAtual: 0
-  danoBase: 10
+  danoAtual: 0
   minhaBarraDeVida: {fileID: 5017189650951596150}
+--- !u!114 &-6985849149526172196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6605982308862564196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bdc23eb7d62eb846b943e3cd75da51d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RecompensaInimigo
+  xpDrop: 50
+  moedasDrop: 20

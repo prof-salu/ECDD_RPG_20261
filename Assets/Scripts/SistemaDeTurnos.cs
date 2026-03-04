@@ -52,10 +52,33 @@ public class SistemaDeTurnos : MonoBehaviour
 
         // Pega sempre o primeiro da fila
         AtributosCombate alvo = inimigosVivos[0];
-        alvo.ReceberDano(atributosHeroi.danoBase);
+        alvo.ReceberDano(atributosHeroi.danoAtual);
 
         // Se a vida dele chegou a zero, remove-o da fila
-        if (alvo.hpAtual <= 0) inimigosVivos.RemoveAt(0);
+        if (alvo.hpAtual <= 0)
+        {
+            // 1. Busca os novos scripts separados
+            RecompensaInimigo loot = alvo.GetComponent<RecompensaInimigo>();
+            ProgressoJogador progresso = atributosHeroi.GetComponent<ProgressoJogador>();
+
+            // 2. Transfere a recompensa
+            if (loot != null && progresso != null)
+            {
+                progresso.GanharXP(loot.xpDrop);
+                DadosGlobais.moedasJogador += loot.moedasDrop;
+                Debug.Log("Você encontrou " + loot.moedasDrop + " moedas!");
+
+                // 3. Salva as recompensas
+                DadosGlobais.xpJogador = progresso.xpAtual;
+                DadosGlobais.nivelJogador = atributosHeroi.nivel;
+
+                Debug.Log("Você encontrou " + loot.moedasDrop + " moedas!");
+
+            }
+
+            // 4. Tira o monstro da fila
+            inimigosVivos.RemoveAt(0);
+        }
 
         VerificarFimDeTurnoJogador();
     }
@@ -69,7 +92,6 @@ public class SistemaDeTurnos : MonoBehaviour
 
         VerificarFimDeTurnoJogador();
     }
-    // -----------------------------------------------------------
 
     void VerificarFimDeTurnoJogador()
     {
@@ -114,7 +136,20 @@ public class SistemaDeTurnos : MonoBehaviour
     IEnumerator FinalizarBatalha(bool jogadorVenceu)
     {
         // SALVANDO A VIDA: O Herói vai para o mapa com as feridas da batalha!
-        DadosGlobais.hpAtualJogador = atributosHeroi.hpAtual;
+        if (atributosHeroi != null)
+        {
+            // 1. Puxa os dados corretos dos componentes atualizados do Herói
+            ProgressoJogador progresso = atributosHeroi.GetComponent<ProgressoJogador>();
+
+            // 2. Salva Vida e Nível
+            DadosGlobais.hpAtualJogador = atributosHeroi.hpAtual;
+            DadosGlobais.nivelJogador = atributosHeroi.nivel;
+
+            if (progresso != null)
+            {
+                DadosGlobais.xpJogador = progresso.xpAtual;
+            }
+        }
 
         yield return new WaitForSeconds(2f);
 

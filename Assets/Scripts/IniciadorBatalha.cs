@@ -5,16 +5,14 @@ using UnityEngine.SceneManagement;
 public class IniciadorBatalha : MonoBehaviour
 {
     // Esta função "captura" os dados de quem a chamou e executa a transição!
-    public void DispararBatalha(GameObject player, string idUnico, List<GameObject> inimigosDesteGrupo)
+    public void DispararBatalha(GameObject player, string idUnico, List<GameObject> inimigosDesteGrupo, List<int> niveis)
     {
-        // 1. Salva a posição do herói
         DadosGlobais.posicaoRetornoJogador = player.transform.position;
-
-        // 2. Salva a identidade e a formação para a Arena
         DadosGlobais.idInimigoEmCombate = idUnico;
-        DadosGlobais.prefabsInimigos = new List<GameObject>(inimigosDesteGrupo);
 
-        // 3. Muda de cena
+        DadosGlobais.prefabsInimigos = new List<GameObject>(inimigosDesteGrupo);
+        DadosGlobais.niveisInimigosParaArena = new List<int>(niveis);
+
         SceneManager.LoadScene("CenaBatalha");
     }
 }
