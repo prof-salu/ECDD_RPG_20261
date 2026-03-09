@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0de2cf5cdc0244f399774c8ec1c1c489, type: 3}
+  m_Name: Quest_01_Encontrar
+  m_EditorClassIdentifier: Assembly-CSharp::Quest
+  nomeQuest: "Uma po\xE7\xE3o para um ca\xE7ador"
+  tipoDeMissao: 0
+  nomeNpcEmissor: Aldeao
+  nomeNpcDestino: Cacador
+  falaInicio: "O Ca\xE7ador precisa de ajuda com uma po\xE7\xE3o. Vai procur\xE1-lo!"
+  falaAndamento: 
+  falaConclusao: "Ah, o Alde\xE3o te mandou\uF746? \xD3timo, preciso de ingredientes."
+  descricaoNoHUD: 
+  quantidadeObjetivo: 0
+  nomeItemColeta: 
+  recompensaOuro: 10
+  recompensaXP: 50
+  proximaQuestDisponivel: {fileID: 11400000, guid: 847945aaa8f4f4bdeae74541d1f74ffd, type: 2}
