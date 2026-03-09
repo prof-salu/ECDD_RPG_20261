@@ -26,7 +26,7 @@ public class SistemaDeTurnos : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        // 1. Configura o Herói e a sua Barra de Vida
+        // 1. Configura o Herï¿½i e a sua Barra de Vida
         atributosHeroi = GameObject.FindGameObjectWithTag("Player").GetComponent<AtributosCombate>();
         atributosHeroi.minhaBarraDeVida = sliderHeroiUI;
         atributosHeroi.AtualizarBarra();
@@ -43,11 +43,11 @@ public class SistemaDeTurnos : MonoBehaviour
 
     void IniciarTurnoJogador() { estadoAtual = EstadoBatalha.TurnoJogador; }
 
-    // --- FUNÇÕES DOS BOTÕES (O 'Update' já não mora aqui!) ---
+    // --- FUNï¿½ï¿½ES DOS BOTï¿½ES (O 'Update' jï¿½ nï¿½o mora aqui!) ---
 
     public void BotaoAtacar()
     {
-        // Proteção: Só funciona se for o turno do Jogador
+        // Proteï¿½ï¿½o: Sï¿½ funciona se for o turno do Jogador
         if (estadoAtual != EstadoBatalha.TurnoJogador) return;
 
         // Pega sempre o primeiro da fila
@@ -57,6 +57,7 @@ public class SistemaDeTurnos : MonoBehaviour
         // Se a vida dele chegou a zero, remove-o da fila
         if (alvo.hpAtual <= 0)
         {
+            
             // 1. Busca os novos scripts separados
             RecompensaInimigo loot = alvo.GetComponent<RecompensaInimigo>();
             ProgressoJogador progresso = atributosHeroi.GetComponent<ProgressoJogador>();
@@ -66,14 +67,23 @@ public class SistemaDeTurnos : MonoBehaviour
             {
                 progresso.GanharXP(loot.xpDrop);
                 DadosGlobais.moedasJogador += loot.moedasDrop;
-                Debug.Log("Você encontrou " + loot.moedasDrop + " moedas!");
+                Debug.Log("Vocï¿½ encontrou " + loot.moedasDrop + " moedas!");
 
                 // 3. Salva as recompensas
                 DadosGlobais.xpJogador = progresso.xpAtual;
                 DadosGlobais.nivelJogador = atributosHeroi.nivel;
 
-                Debug.Log("Você encontrou " + loot.moedasDrop + " moedas!");
+                Debug.Log("Vocï¿½ encontrou " + loot.moedasDrop + " moedas!");
 
+                // --- RASTREADOR DE MISSÃ•ES (CaÃ§a ou Coleta) ---
+                if (DadosGlobais.questAtiva != null) 
+                {
+                    if (DadosGlobais.questAtiva.tipoDeMissao == TipoQuest.CacarMonstros || DadosGlobais.questAtiva.tipoDeMissao == TipoQuest.ColetarItens)
+                    {
+                        DadosGlobais.progressoQuestAtual++;
+                        Debug.Log("Quest Atualizada no Console: " + DadosGlobais.progressoQuestAtual + "/" + DadosGlobais.questAtiva.quantidadeObjetivo);
+                    }
+                }
             }
 
             // 4. Tira o monstro da fila
@@ -87,7 +97,7 @@ public class SistemaDeTurnos : MonoBehaviour
     {
         if (estadoAtual != EstadoBatalha.TurnoJogador) return;
 
-        // Chama a função Curar que criámos no AtributosCombate!
+        // Chama a funï¿½ï¿½o Curar que criï¿½mos no AtributosCombate!
         atributosHeroi.Curar(30);
 
         VerificarFimDeTurnoJogador();
@@ -95,7 +105,7 @@ public class SistemaDeTurnos : MonoBehaviour
 
     void VerificarFimDeTurnoJogador()
     {
-        // Se a fila de inimigos ficou vazia, o Herói ganhou!
+        // Se a fila de inimigos ficou vazia, o Herï¿½i ganhou!
         if (inimigosVivos.Count == 0)
         {
             estadoAtual = EstadoBatalha.Vitoria;
@@ -103,7 +113,7 @@ public class SistemaDeTurnos : MonoBehaviour
         }
         else
         {
-            // Se ainda há monstros, passa-lhes a vez
+            // Se ainda hï¿½ monstros, passa-lhes a vez
             estadoAtual = EstadoBatalha.TurnoInimigo;
             StartCoroutine(TurnoDoInimigo());
         }
@@ -117,11 +127,11 @@ public class SistemaDeTurnos : MonoBehaviour
             yield return new WaitForSeconds(1f);
             atributosHeroi.ReceberDano(inimigo.danoBase);
 
-            // Se o herói morrer a meio dos ataques inimigos, para o ciclo imediatamente
+            // Se o herï¿½i morrer a meio dos ataques inimigos, para o ciclo imediatamente
             if (atributosHeroi.hpAtual <= 0) break;
         }
 
-        // Verifica se o herói sobreviveu à rodada
+        // Verifica se o herï¿½i sobreviveu ï¿½ rodada
         if (atributosHeroi.hpAtual <= 0)
         {
             estadoAtual = EstadoBatalha.Derrota;
@@ -135,13 +145,13 @@ public class SistemaDeTurnos : MonoBehaviour
 
     IEnumerator FinalizarBatalha(bool jogadorVenceu)
     {
-        // SALVANDO A VIDA: O Herói vai para o mapa com as feridas da batalha!
+        // SALVANDO A VIDA: O Herï¿½i vai para o mapa com as feridas da batalha!
         if (atributosHeroi != null)
         {
-            // 1. Puxa os dados corretos dos componentes atualizados do Herói
+            // 1. Puxa os dados corretos dos componentes atualizados do Herï¿½i
             ProgressoJogador progresso = atributosHeroi.GetComponent<ProgressoJogador>();
 
-            // 2. Salva Vida e Nível
+            // 2. Salva Vida e Nï¿½vel
             DadosGlobais.hpAtualJogador = atributosHeroi.hpAtual;
             DadosGlobais.nivelJogador = atributosHeroi.nivel;
 
@@ -155,7 +165,7 @@ public class SistemaDeTurnos : MonoBehaviour
 
         if (jogadorVenceu) 
         {
-            // O CEMITÉRIO: Anota o ID do monstro para ele não voltar!
+            // O CEMITï¿½RIO: Anota o ID do monstro para ele nï¿½o voltar!
             DadosGlobais.inimigosDerrotados.Add(DadosGlobais.idInimigoEmCombate);
             SceneManager.LoadScene("Mundo"); 
         }

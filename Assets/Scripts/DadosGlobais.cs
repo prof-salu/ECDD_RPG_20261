@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// A CLASSE MÁGICA: Empacota o Prefab e o Nível juntos!
+// A CLASSE MAGICA: Empacota o Prefab e o Nivel juntos!
 [System.Serializable]
 public class ConfigInimigo
 {
@@ -13,17 +13,23 @@ public static class DadosGlobais
 {
     public static List<GameObject> prefabsInimigos = new List<GameObject>();
 
-    // NOVA LISTA: Vai armazenar os níveis extraídos dos inimigos do mapa!
+    // --- DADOS INIMIGOS ---
     public static List<int> niveisInimigosParaArena = new List<int>();
-
     public static string idInimigoEmCombate;
     public static List<string> inimigosDerrotados = new List<string>();
-    public static Vector2 posicaoRetornoJogador = Vector2.zero;
 
-    // PROGRESSÃO E ECONOMIA 
+    // --- INVENTARIO REAL ---
+    public static Vector2 posicaoRetornoJogador = Vector2.zero;
+    public static int pocoesJogador = 0;
     public static int hpAtualJogador = -1;
     public static int nivelJogador = 1;
     public static int xpJogador = 0;
     public static int moedasJogador = 0;
+    
+    // --- SISTEMA DE MISSÃ•ES LIVRES EM CADEIA ---
+    public static Quest questDisponivel;     
+    public static Quest questAtiva;          
+    public static int progressoQuestAtual = 0; // Serve para monstros OU itens!
+    public static bool historiaConcluida = false; 
 
 }
