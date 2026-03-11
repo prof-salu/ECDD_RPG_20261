@@ -11,6 +11,20 @@ public class SistemaInventario : MonoBehaviour
 
     public event Action onInventarioMudou;
 
+    void Awake()
+    {
+        // 1. Se a memória global estiver vazia (início do jogo), salva os itens iniciais do Inspector nela
+        if (DadosGlobais.inventarioAtual.Count == 0 && inventario.Count > 0)
+        {
+            DadosGlobais.inventarioAtual = new List<SlotInventario>(inventario);
+            moedas = DadosGlobais.moedasJogador;
+        }        
+
+        // 2. Passagem por Referência
+
+        inventario = DadosGlobais.inventarioAtual;
+    }
+
     public void AdicionarItem(DadosItem itemParaAdicionar, int quantidade)
     {
         //1. Verificar se o item é empilhavel
@@ -87,6 +101,29 @@ public class SistemaInventario : MonoBehaviour
                 return true;
         }
         return false;
+    }
+
+    public bool ConsumirItem(DadosItem item)
+    {
+        foreach (SlotInventario slot in inventario)
+        {
+            if (slot.dadosDoItem == item)
+            {
+                slot.quantidade--; // Gasta 1
+
+                // Se a quantidade chegar a zero, removemos o slot da lista
+                if (slot.quantidade <= 0)
+                {
+                    inventario.Remove(slot);
+                }
+
+                // Avisa a Interface para se redesenhar
+                if (onInventarioMudou != null) onInventarioMudou.Invoke();
+
+                return true; // Sucesso!
+            }
+        }
+        return false; // O jogador não tinha esse item
     }
 
     public void ModificarMoedas(int valor)

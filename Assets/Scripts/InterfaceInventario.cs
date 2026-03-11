@@ -20,15 +20,18 @@ public class InterfaceInventario : MonoBehaviour
         AtualizarInterface(); // Atualiza a primeira vez ao iniciar
     }
 
-    public void AtualizarInterface()
+    void Update()
     {
-        // 1. Atualiza as Moedas
+        // NOVO: O Inventário agora lê a fortuna global do jogador o tempo todo!
         if (textoMoedas != null)
         {
-            textoMoedas.text = "Ouro: " + sistemaInventario.moedas.ToString();
+            textoMoedas.text = "Ouro: " + DadosGlobais.moedasJogador.ToString();
         }
+    }
 
-        // 2. Limpeza: Destroi os slots antigos para não duplicar
+
+    public void AtualizarInterface()
+    {
         foreach (Transform filho in containerDoGrid)
         {
             Destroy(filho.gameObject);

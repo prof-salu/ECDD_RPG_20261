@@ -16,6 +16,9 @@ public class SistemaDeTurnos : MonoBehaviour
     // A fila de monstros vivos
     private List<AtributosCombate> inimigosVivos = new List<AtributosCombate>();
 
+    [Tooltip("Arraste o arquivo Scriptable Object da Poção aqui")]
+    public DadosItem pocaoDeVida;
+
     void Start()
     {
         estadoAtual = EstadoBatalha.Preparacao;
@@ -97,10 +100,36 @@ public class SistemaDeTurnos : MonoBehaviour
     {
         if (estadoAtual != EstadoBatalha.TurnoJogador) return;
 
-        // Chama a fun��o Curar que cri�mos no AtributosCombate!
-        atributosHeroi.Curar(30);
+        bool consumiuApenasUma = false;
 
-        VerificarFimDeTurnoJogador();
+        foreach (SlotInventario slot in DadosGlobais.inventarioAtual)
+        {
+            if (slot.dadosDoItem == pocaoDeVida && slot.quantidade > 0)
+            {
+                slot.quantidade--; // Gasta 1
+                consumiuApenasUma = true;
+
+                // Limpa da lista se a quantidade chegar a zero
+                if (slot.quantidade <= 0)
+                {
+                    DadosGlobais.inventarioAtual.Remove(slot);
+                }
+
+                break; // Para o loop para não gastar 2 poções de uma vez!
+            }
+        }
+
+        // 2. Aplica a cura se o jogador tinha a poção!
+        if (consumiuApenasUma)
+        {
+            atributosHeroi.Curar(50);     // Cura
+            Debug.Log("Você bebeu a poção deliciosa!");
+            VerificarFimDeTurnoJogador(); // Passa o turno
+        }
+        else
+        {
+            Debug.LogWarning("Inventário vazio! Você não tem mais Poções de Vida!");
+        }
     }
 
     void VerificarFimDeTurnoJogador()

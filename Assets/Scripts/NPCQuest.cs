@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class NPCQuest : MonoBehaviour
 {
@@ -14,6 +15,11 @@ public class NPCQuest : MonoBehaviour
 
     private bool jogadorPerto = false;
     private GameObject jogadorRef;
+
+    [Header("Interface de Diálogo (NOVO)")]
+    public GameObject painelDialogo;
+    public TextMeshProUGUI textoDialogo;
+
 
     void Start()
     {
@@ -50,13 +56,14 @@ public class NPCQuest : MonoBehaviour
 
     public void Interagir()
     {
-        // -------------------------------------------------------------
-        // TODO O DIÁLOGO VAI PARA O CONSOLE NESTA AULA! (Logica pura)
-        // -------------------------------------------------------------
-        
+        // 1. Liga o painel visual
+        if (painelDialogo != null) painelDialogo.SetActive(true);
+        if (textoDialogo == null) return;
+
+
         if (DadosGlobais.historiaConcluida) 
         {
-            Debug.Log(meuNome + " diz: A paz reina na nossa floresta graças a você!");
+            textoDialogo.text = (meuNome + " diz: A paz reina na nossa floresta graças a você!");
             return;
         }
 
@@ -73,18 +80,18 @@ public class NPCQuest : MonoBehaviour
 
                 if (terminouCaca || terminouColeta || terminouEntrega)
                 {
-                    Debug.Log(meuNome + " diz: " + quest.falaConclusao + " (Recebeu " + quest.recompensaOuro + " Ouro!)");
+                    textoDialogo.text = (meuNome + " diz: " + quest.falaConclusao + " (Recebeu " + quest.recompensaOuro + " Ouro!)");
                     EntregarRecompensa(quest);
                 }
                 else
                 {
                     // INCLUINDO O NOME DO ITEM AQUI!
-                    Debug.Log(meuNome + " diz: " + quest.falaAndamento + " (Progresso: " + DadosGlobais.progressoQuestAtual + "/" + quest.quantidadeObjetivo + " " + quest.nomeItemColeta + ")");
+                    textoDialogo.text = (meuNome + " diz: " + quest.falaAndamento + " (Progresso: " + DadosGlobais.progressoQuestAtual + "/" + quest.quantidadeObjetivo + " " + quest.nomeItemColeta + ")");
                 }
             }
             else 
             {
-                Debug.Log(meuNome + " diz: O " + quest.nomeNpcDestino + " está à sua espera. Não perca tempo aqui!");
+                textoDialogo.text = (meuNome + " diz: O " + quest.nomeNpcDestino + " está à sua espera. Não perca tempo aqui!");
             }
             return;
         }
@@ -94,20 +101,20 @@ public class NPCQuest : MonoBehaviour
         {
             if (DadosGlobais.questDisponivel.nomeNpcEmissor == meuNome)
             {
-                Debug.Log(meuNome + " diz: " + DadosGlobais.questDisponivel.falaInicio);
+                textoDialogo.text = (meuNome + " diz: " + DadosGlobais.questDisponivel.falaInicio);
                 DadosGlobais.questAtiva = DadosGlobais.questDisponivel; 
                 DadosGlobais.questDisponivel = null; 
                 DadosGlobais.progressoQuestAtual = 0;
             }
             else
             {
-                Debug.Log(meuNome + " diz: Ouvi dizer que o " + DadosGlobais.questDisponivel.nomeNpcEmissor + " está à sua procura.");
+                textoDialogo.text = (meuNome + " diz: Ouvi dizer que o " + DadosGlobais.questDisponivel.nomeNpcEmissor + " está à sua procura.");
             }
             return;
         }
 
         // CENA 3: VAZIO
-        Debug.Log(meuNome + " diz: Olá aventureiro! O dia está lindo hoje.");
+        textoDialogo.text = (meuNome + " diz: Olá aventureiro! O dia está lindo hoje.");
     }
 
     void EntregarRecompensa(Quest questConcluida)
@@ -121,6 +128,24 @@ public class NPCQuest : MonoBehaviour
         if (DadosGlobais.questDisponivel == null) DadosGlobais.historiaConcluida = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D c) { if (c.CompareTag("Player")) { jogadorPerto = true; jogadorRef = c.gameObject; } }
-    private void OnTriggerExit2D(Collider2D c) { if (c.CompareTag("Player")) { jogadorPerto = false; } }
+    private void OnTriggerEnter2D(Collider2D collision) 
+    { 
+        if (collision.CompareTag("Player")) { 
+            jogadorPerto = true; 
+            jogadorRef = collision.gameObject; 
+        } 
+    }
+    private void OnTriggerExit2D(Collider2D collision) 
+    { 
+        if (collision.CompareTag("Player")) 
+        { 
+            jogadorPerto = false;
+
+            if (painelDialogo != null)
+            {
+                painelDialogo.SetActive(false);
+            }
+        }
+
+    }
 }

@@ -25,6 +25,8 @@ public static class DadosGlobais
     public static int nivelJogador = 1;
     public static int xpJogador = 0;
     public static int moedasJogador = 0;
+    // NOVO: Acesso ao Inventário para consumo de itens na Arena e exibição na UI
+    public static List<SlotInventario> inventarioAtual = new List<SlotInventario>();
     
     // --- SISTEMA DE MISSÕES LIVRES EM CADEIA ---
     public static Quest questDisponivel;     

@@ -2,18 +2,17 @@ using UnityEngine;
 
 public class MoedaColetavel : MonoBehaviour
 {
+    [Header("Configuração")]
+    [Tooltip("Quantidade de ouro que esta moeda vale ao ser coletada")]
     public int valor = 1; // Quanto vale essa moeda?
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.CompareTag("Player"))
+        // Se quem encostou na moeda tem a tag "Player" (o Herói)
+        if (collision.CompareTag("Player"))
         {
-            SistemaInventario inventario = FindFirstObjectByType<SistemaInventario>();
-            if (inventario != null)
-            {
-                inventario.ModificarMoedas(valor);
-                Destroy(gameObject); // Some com a moeda
-            }
+            DadosGlobais.moedasJogador += valor;
+            Destroy(gameObject);
         }
     }
 }
