@@ -33,5 +33,9 @@ public static class DadosGlobais
     public static Quest questAtiva;          
     public static int progressoQuestAtual = 0; // Serve para monstros OU itens!
     public static bool historiaConcluida = false; 
+    
+    // NOVO: Bônus Permanentes comprados na Loja
+    public static int bonusAtaque = 0;
+    public static int bonusVidaMax = 0;
 
 }
