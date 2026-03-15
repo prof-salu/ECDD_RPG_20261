@@ -29,10 +29,19 @@ public class SistemaDeTurnos : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        // 1. Configura o Her�i e a sua Barra de Vida
-        atributosHeroi = GameObject.FindGameObjectWithTag("Player").GetComponent<AtributosCombate>();
+        // 1. Configura o Heroi e a sua Barra de Vida
+        atributosHeroi = GameObject.FindGameObjectWithTag("Player")
+                                                .GetComponent<AtributosCombate>();
         atributosHeroi.minhaBarraDeVida = sliderHeroiUI;
+
+        // Aplica o bônus de vida máxima e cura o jogador
+        atributosHeroi.hpMaximo += DadosGlobais.bonusVidaMax;
+        atributosHeroi.hpAtual = atributosHeroi.hpMaximo;
+        
         atributosHeroi.AtualizarBarra();
+        
+        // O ataque básico passa a dar mais dano graças à espada afiada!
+        atributosHeroi.danoAtual += DadosGlobais.bonusAtaque; 
 
         // 2. Preenche a fila de inimigos procurando pela Tag
         GameObject[] objsInimigos = GameObject.FindGameObjectsWithTag("Inimigo");
@@ -45,12 +54,10 @@ public class SistemaDeTurnos : MonoBehaviour
     }
 
     void IniciarTurnoJogador() { estadoAtual = EstadoBatalha.TurnoJogador; }
-
-    // --- FUN��ES DOS BOT�ES (O 'Update' j� n�o mora aqui!) ---
-
+    
     public void BotaoAtacar()
     {
-        // Prote��o: S� funciona se for o turno do Jogador
+        // Protecao: Sa funciona se for o turno do Jogador
         if (estadoAtual != EstadoBatalha.TurnoJogador) return;
 
         // Pega sempre o primeiro da fila
