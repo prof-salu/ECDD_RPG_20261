@@ -16,5 +16,5 @@ MonoBehaviour:
   id: item_flecha
   icone: {fileID: 21300000, guid: c3f2fe5f3ebaff54686470b25924edb6, type: 3}
   descricao: Flecha.
-  valorEmOuro: 1
+  valorEmOuro: 2
   ehEmpilhavel: 1

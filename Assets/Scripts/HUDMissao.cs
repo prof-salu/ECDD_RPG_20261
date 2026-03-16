@@ -3,7 +3,7 @@ using TMPro;
 
 public class HUDMissao : MonoBehaviour
 {
-    [Header("HUD da Miss�o")]
+    [Header("HUD da Miss�zo")]
     public TextMeshProUGUI textoTrackerQuest;
 
     void Update()
@@ -12,23 +12,23 @@ public class HUDMissao : MonoBehaviour
 
         if (DadosGlobais.historiaConcluida)
         {
-            textoTrackerQuest.text = "Hist�ria Conclu�da!";
+            textoTrackerQuest.text = "Historia Concluida!";
         }
         else if (DadosGlobais.questAtiva != null)
         {
 
             if (DadosGlobais.questAtiva.tipoDeMissao == TipoQuest.CacarMonstros || DadosGlobais.questAtiva.tipoDeMissao == TipoQuest.ColetarItens)
-                textoTrackerQuest.text = "Miss�o Ativa: " + DadosGlobais.questAtiva.descricaoNoHUD + " (" + DadosGlobais.progressoQuestAtual + "/" + DadosGlobais.questAtiva.quantidadeObjetivo + " " + DadosGlobais.questAtiva.nomeItemColeta + ")";
+                textoTrackerQuest.text = "Missao Ativa: " + DadosGlobais.questAtiva.descricaoNoHUD + " (" + DadosGlobais.progressoQuestAtual + "/" + DadosGlobais.questAtiva.quantidadeObjetivo + " " + DadosGlobais.questAtiva.nomeItemColeta + ")";
             else
-                textoTrackerQuest.text = "Miss�o Ativa: " + DadosGlobais.questAtiva.descricaoNoHUD;
+                textoTrackerQuest.text = "Missao Ativa: Procure pelo(a) " + DadosGlobais.questAtiva.nomeNpcDestino;
         }
         else if (DadosGlobais.questDisponivel != null)
         {
-            textoTrackerQuest.text = "Nova Miss�o: Procure o tri�ngulo azul no(a) " + DadosGlobais.questDisponivel.nomeNpcEmissor;
+            textoTrackerQuest.text = "Nova Missao: Procure o triangulo azul no(a) " + DadosGlobais.questDisponivel.nomeNpcEmissor;
         }
         else
         {
-            textoTrackerQuest.text = "Nenhuma miss�o ativa.";
+            textoTrackerQuest.text = "Nenhuma Missao ativa.";
         }
     }
 }

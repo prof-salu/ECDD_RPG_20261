@@ -16,6 +16,5 @@ MonoBehaviour:
   id: item_pedra_polida
   icone: {fileID: 0}
   descricao: Pedra brilhante.
-  valorEmOuro: 1
+  valorEmOuro: 2
   ehEmpilhavel: 1
-  raridade: 0

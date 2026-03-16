@@ -16,5 +16,5 @@ MonoBehaviour:
   id: item_madeira
   icone: {fileID: 21300000, guid: c1f1d63eaa0f1cc468cdebd3953dc934, type: 3}
   descricao: Madeira.
-  valorEmOuro: 1
+  valorEmOuro: 10
   ehEmpilhavel: 0

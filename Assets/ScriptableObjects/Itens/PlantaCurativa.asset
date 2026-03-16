@@ -16,5 +16,5 @@ MonoBehaviour:
   id: item_planta_curativa
   icone: {fileID: 21300000, guid: 65e460977dedf87438cfd8a950b0db76, type: 3}
   descricao: Planta curativa
-  valorEmOuro: 1
+  valorEmOuro: 2
   ehEmpilhavel: 0

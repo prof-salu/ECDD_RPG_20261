@@ -16,5 +16,5 @@ MonoBehaviour:
   id: item_arco_treinamento
   icone: {fileID: 21300000, guid: c5ef96b308f875042a44cfaf4fad96d1, type: 3}
   descricao: Arco de madeira para treinamento.
-  valorEmOuro: 1
+  valorEmOuro: 5
   ehEmpilhavel: 0

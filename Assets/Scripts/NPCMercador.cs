@@ -1,13 +1,19 @@
 using TMPro;
 using UnityEngine;
-using TMPro;
 
 public class NPCMercador : MonoBehaviour
 {
     [Header("Interface da Loja")]
-    public GameObject painelLoja;
-    public TextMeshProUGUI textoFeedback;
-    
+    public GameObject painelHub;
+    public GameObject painelCompra; 
+    public GameObject painelVenda;
+    public TextMeshProUGUI textoFeedbackVenda;
+    public TextMeshProUGUI textoFeedbackCompra;
+
+    [Header("Gerador de Vendas")]
+    public Transform containerVendas;
+    public GameObject prefabBotaoVenda;
+
     [Header("Integração com Inventário")]
     public SistemaInventario sistemaInventario; // Para entregarmos a poção na mochila
     public DadosItem pocaoDeVida;
@@ -30,14 +36,32 @@ public class NPCMercador : MonoBehaviour
 
     public void AbrirLoja()
     {
-        painelLoja.SetActive(true);
-        textoFeedback.text = "Bem-vindo!\nO que vai querer hoje?";
+        painelHub.SetActive(true);
+        painelCompra.SetActive(false);
+        painelVenda.SetActive(false);
     }
 
-    public void FecharLoja()
+    public void AbrirAbaCompra()
     {
-        painelLoja.SetActive(false);
+        painelHub.SetActive(false);
+        painelCompra.SetActive(true);
     }
+
+    public void AbrirAbaVenda()
+    {
+        painelHub.SetActive(false);
+        painelVenda.SetActive(true);
+        textoFeedbackVenda.text = "O que você encontrou na floresta?";
+        GerarListaDeVendas(); // Vasculha a mochila!
+    }
+
+    public void FecharTudo()
+    {
+        painelHub.SetActive(false);
+        painelCompra.SetActive(false);
+        painelVenda.SetActive(false);
+    }
+
 
     // --- LÓGICA DE COMPRA ---
     public void ComprarPocao()
@@ -50,15 +74,15 @@ public class NPCMercador : MonoBehaviour
             
             // 3. Entrega o item
             sistemaInventario.AdicionarItem(pocaoDeVida, 1);
-            
+
             // 4. Feedback visual
-            textoFeedback.text = "Poção comprada com sucesso!";
+            textoFeedbackCompra.text = "Poção comprada com sucesso!";
             Debug.Log("Comprou Poção! Saldo atual: " + DadosGlobais.moedasJogador);
         }
         else
         {
             // O jogador é pobre
-            textoFeedback.text = "Ouro insuficiente! Vá caçar monstros.";
+            textoFeedbackCompra.text = "Ouro insuficiente! Vá caçar monstros.";
         }
     }
     
@@ -71,13 +95,13 @@ public class NPCMercador : MonoBehaviour
             DadosGlobais.bonusAtaque += 10; // O herói dará +10 de dano para sempre!
             
             // Deixa mais caro para a próxima vez (Inflação do RPG!)
-            precoAfiarEspada += 50; 
-            
-            textoFeedback.text = "Espada afiada! (+10 Ataque)";
+            precoAfiarEspada += 50;
+
+            textoFeedbackCompra.text = "Espada afiada! (+10 Ataque)";
         }
         else
         {
-            textoFeedback.text = "Ouro insuficiente para melhorar a espada!";
+            textoFeedbackCompra.text = "Ouro insuficiente para melhorar a espada!";
         }
     }
 
@@ -89,13 +113,59 @@ public class NPCMercador : MonoBehaviour
             DadosGlobais.bonusVidaMax += 25; // Herói terá +25 de Vida Máxima
             
             precoArmadura += 75; 
-            textoFeedback.text = "Armadura reforçada! (+25 Vida)";
+            textoFeedbackCompra.text = "Armadura reforçada! (+25 Vida)";
         }
         else
         {
-            textoFeedback.text = "Ouro insuficiente para a armadura!";
+            textoFeedbackCompra.text = "Ouro insuficiente para a armadura!";
         }
     }
+
+    // --- LÓGICA DE VENDA DINÂMICA ---
+    public void GerarListaDeVendas()
+    {
+        // 1. Destrói os botões antigos para não duplicar a lista
+        foreach (Transform filho in containerVendas)
+        {
+            Destroy(filho.gameObject);
+        }
+
+        // 2. Vasculha a Memória Global
+        foreach (SlotInventario slot in DadosGlobais.inventarioAtual)
+        {
+            // Só cria o botão se a metade do valor do item for pelo menos 1 (item.valor >= 2)
+            if (slot.dadosDoItem.valorEmOuro >= 2 && slot.quantidade > 0)
+            {
+                // Clona o botão e coloca dentro do Container
+                GameObject novoBotao = Instantiate(prefabBotaoVenda, containerVendas);
+
+                // Entrega as informações para o botão
+                novoBotao.GetComponent<BotaoVendaUI>().ConfigurarBotao(slot.dadosDoItem, slot.quantidade, this);
+            }
+        }
+    }
+
+    // Chamado pelo Botão quando o jogador clica!
+    public void ExecutarVenda(DadosItem itemParaVender)
+    {
+        // O jogador recebe apenas metade do valor do item!
+        int lucro = itemParaVender.valorEmOuro / 2;
+
+        // 1. Atualiza o dinheiro global
+        DadosGlobais.moedasJogador += lucro;
+
+        if (sistemaInventario != null)
+        {
+            // 2. Usa a sua função pronta que já remove da lista e invoca a UI do inventário!
+            sistemaInventario.RemoverItem(itemParaVender, 1);
+        }
+
+        textoFeedbackVenda.text = "Vendeu " + itemParaVender.name + " por " + lucro + " Ouro!";
+
+        // 3. Recria os botões de venda para atualizar a quantidade exibida ou remover o botão se acabou!
+        GerarListaDeVendas();
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -107,7 +177,7 @@ public class NPCMercador : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             jogadorPerto = false;
-            FecharLoja(); // Fecha a loja se o jogador for embora
+            FecharTudo(); // Fecha a loja se o jogador for embora
         }
     }
 }

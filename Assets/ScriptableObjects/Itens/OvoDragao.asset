@@ -16,5 +16,5 @@ MonoBehaviour:
   id: item_ovo_dragao
   icone: {fileID: 21300000, guid: 4fa348e5714f45a4fbddb1ccde7d1ffd, type: 3}
   descricao: "Ovo de Drag\xE3o"
-  valorEmOuro: 5
+  valorEmOuro: 6
   ehEmpilhavel: 0

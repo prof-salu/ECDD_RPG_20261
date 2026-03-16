@@ -16,5 +16,5 @@ MonoBehaviour:
   id: item_escudo_treinamento
   icone: {fileID: 0}
   descricao: Escudo de madeira para treinamento.
-  valorEmOuro: 2
+  valorEmOuro: 5
   ehEmpilhavel: 0
