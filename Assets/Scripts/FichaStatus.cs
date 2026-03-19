@@ -1,106 +1,69 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor.Animations;
 
 public class FichaStatus : MonoBehaviour
 {
-    public GameObject janelaStatus;
-
     [Header("Textos")]
     public TextMeshProUGUI txtNome;
     public TextMeshProUGUI txtNivel;
     public TextMeshProUGUI txtAtaque;
     public TextMeshProUGUI txtVida;
-    public TextMeshProUGUI txtLevelUpAviso;
 
     [Header("Barra de Experiência")]
     public Slider barraXP;
     public TextMeshProUGUI txtNumerosXP;
 
     private ProgressoJogador progressoHeroi;
-    private int nivelAnterior;
+    private AtributosCombate atributosHeroi;
+    private GameObject player;
+
 
     void Start()
     {
-        janelaStatus.SetActive(false);
-        nivelAnterior = DadosGlobais.nivelJogador;
-        if (txtLevelUpAviso != null) txtLevelUpAviso.gameObject.SetActive(false);
-
+        gameObject.SetActive(false);
         // Busca o Herói que está vivo no mapa!
-        GameObject objPlayer = GameObject.FindGameObjectWithTag("Player");
-        if (objPlayer != null)
+        player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
         {
-            progressoHeroi = objPlayer.GetComponent<ProgressoJogador>();
+            progressoHeroi = player.GetComponent<ProgressoJogador>();
+            atributosHeroi = player.GetComponent<AtributosCombate>();
         }
     }
-
-    void Update()
+    public void AtualizarFicha()
     {
-        // Pressione 'I' para abrir/fechar o Status do Personagem
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            janelaStatus.SetActive(!janelaStatus.activeSelf);
-        }
+        if (atributosHeroi == null || progressoHeroi == null) return;
 
-        // Se a janela estiver aberta, desenha os números em tempo real!
-        if (janelaStatus.activeSelf)
-        {
-            AtualizarFicha();
-        }
+        // 1. Textos baseados nos Atributos Reais
+        txtNome.text = $"Herói: {atributosHeroi.nomePersonagem}";
+        txtNivel.text = $"Nível Atual: {atributosHeroi.nivel}";
 
-        VerificarAnimacaoLevelUp();
-    }
+        int ataqueTotal = atributosHeroi.danoAtual + DadosGlobais.bonusAtaque;
+        int vidaTotal = atributosHeroi.hpMaximo + DadosGlobais.bonusVidaMax;
 
-    void AtualizarFicha()
-    {
-        txtNome.text = "Herói: Aventureiro";
-        txtNivel.text = "Nível Atual: " + DadosGlobais.nivelJogador;
+        txtAtaque.text = $"Ataque:  {ataqueTotal} ({atributosHeroi.danoAtual} + {DadosGlobais.bonusAtaque}) ";
+        txtVida.text = $"HP:  {vidaTotal} ({atributosHeroi.hpMaximo} + {DadosGlobais.bonusVidaMax}) ";
 
-        // Mostramos o cálculo de RPG clássico para o jogador
-        int ataqueTotal = 15 + DadosGlobais.bonusAtaque; // Assumindo Base 15
-        int vidaTotal = 100 + DadosGlobais.bonusVidaMax; // Assumindo Base 100
-
-        txtAtaque.text = "Ataque: " + ataqueTotal + " (Base 15 + " + DadosGlobais.bonusAtaque + " Bônus)";
-        txtVida.text = "Vida Max: " + vidaTotal + " (Base 100 + " + DadosGlobais.bonusVidaMax + " Bônus)";
-
-        // Atualiza a Barra de XP PUXANDO DO JOGADOR
-        if (barraXP != null && progressoHeroi != null)
+        // 2. Atualiza a Barra de XP PUXANDO DO JOGADOR
+        if (barraXP != null)
         {
             int metaDeXP = 0;
-            int nivelHeroi = DadosGlobais.nivelJogador;
+            int nivelHeroi = atributosHeroi.nivel;
 
             if (nivelHeroi <= progressoHeroi.xpNecessariaPorNivel.Length)
             {
-                // Busca no Array de evolução o nível do Herói
                 metaDeXP = progressoHeroi.xpNecessariaPorNivel[nivelHeroi - 1];
             }
             else
             {
-                // Se chegou ao nível máximo, usa a última meta disponível
                 metaDeXP = progressoHeroi.xpNecessariaPorNivel[progressoHeroi.xpNecessariaPorNivel.Length - 1];
             }
 
             barraXP.maxValue = metaDeXP;
-            barraXP.value = DadosGlobais.xpJogador;
-            txtNumerosXP.text = DadosGlobais.xpJogador + " / " + metaDeXP + " XP";
+            barraXP.value = progressoHeroi.xpAtual; // Puxa a XP fresquinha!
+            txtNumerosXP.text = $"{progressoHeroi.xpAtual} / {metaDeXP} XP";
         }
-    }
-
-    void VerificarAnimacaoLevelUp()
-    {
-        // Feedback Visual simples se o nível subir!
-        if (DadosGlobais.nivelJogador > nivelAnterior)
-        {
-            if (txtLevelUpAviso != null)
-            {
-                txtLevelUpAviso.gameObject.SetActive(true);
-                Invoke("EsconderAvisoLevelUp", 3f); // Some após 3 segundos
-            }
-            nivelAnterior = DadosGlobais.nivelJogador;
-        }
-    }
-
-    void EsconderAvisoLevelUp() { 
-        txtLevelUpAviso.gameObject.SetActive(false); 
     }
 }

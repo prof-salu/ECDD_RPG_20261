@@ -67,10 +67,10 @@ public class NPCMercador : MonoBehaviour
     public void ComprarPocao()
     {
         // 1. Verifica se o jogador tem dinheiro suficiente no Banco Central (DadosGlobais)
-        if (DadosGlobais.moedasJogador >= precoPocao)
+        if (sistemaInventario.moedas >= precoPocao)
         {
             // 2. Cobra o valor
-            DadosGlobais.moedasJogador -= precoPocao;
+            sistemaInventario.ModificarMoedas (-precoPocao);
             
             // 3. Entrega o item
             sistemaInventario.AdicionarItem(pocaoDeVida, 1);
@@ -89,9 +89,9 @@ public class NPCMercador : MonoBehaviour
     // Adicione esta função abaixo da ComprarPocao()
     public void ComprarMelhoriaEspada()
     {
-        if (DadosGlobais.moedasJogador >= precoAfiarEspada)
+        if (sistemaInventario.moedas >= precoAfiarEspada)
         {
-            DadosGlobais.moedasJogador -= precoAfiarEspada;
+            sistemaInventario.moedas -= precoAfiarEspada;
             DadosGlobais.bonusAtaque += 10; // O herói dará +10 de dano para sempre!
             
             // Deixa mais caro para a próxima vez (Inflação do RPG!)
@@ -107,9 +107,9 @@ public class NPCMercador : MonoBehaviour
 
     public void ComprarMelhoriaArmadura()
     {
-        if (DadosGlobais.moedasJogador >= precoArmadura)
+        if (sistemaInventario.moedas >= precoArmadura)
         {
-            DadosGlobais.moedasJogador -= precoArmadura;
+            sistemaInventario.moedas -= precoArmadura;
             DadosGlobais.bonusVidaMax += 25; // Herói terá +25 de Vida Máxima
             
             precoArmadura += 75; 
@@ -152,7 +152,7 @@ public class NPCMercador : MonoBehaviour
         int lucro = itemParaVender.valorEmOuro / 2;
 
         // 1. Atualiza o dinheiro global
-        DadosGlobais.moedasJogador += lucro;
+        sistemaInventario.ModificarMoedas(lucro);
 
         if (sistemaInventario != null)
         {

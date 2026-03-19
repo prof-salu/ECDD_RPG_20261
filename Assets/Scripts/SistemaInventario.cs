@@ -129,6 +129,7 @@ public class SistemaInventario : MonoBehaviour
     public void ModificarMoedas(int valor)
     {
         moedas += valor;
+        Debug.Log("Voce encontrou " + valor + " moedas!");
         if (moedas < 0)
         {
             moedas = 0; // Não deixa ficar negativo

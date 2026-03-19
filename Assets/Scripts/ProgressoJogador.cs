@@ -11,19 +11,17 @@ public class ProgressoJogador : MonoBehaviour
 
     private AtributosCombate meusAtributos;
 
+    [Tooltip("Texto LEVEL UP")]
+    public GameObject efeitoLevelUp;
+
     void Start()
     {
         meusAtributos = GetComponent<AtributosCombate>();
 
-        // Se já tem dados guardados na memória da floresta, puxa-os!
-        if (DadosGlobais.nivelJogador > 1 || DadosGlobais.xpJogador > 0)
-        {
-            meusAtributos.nivel = DadosGlobais.nivelJogador;
-            xpAtual = DadosGlobais.xpJogador;
+        IniciadorBatalha.CarregarDadosJogador(gameObject);
 
-            // Força o recálculo do HP e Dano com o nível guardado
-            meusAtributos.CalcularStatus();
-        }
+        // Esconde o texto de Level Up visual ao nascer
+        if (efeitoLevelUp != null) efeitoLevelUp.SetActive(false);
     }
 
     public void GanharXP(int quantidade)
@@ -56,7 +54,19 @@ public class ProgressoJogador : MonoBehaviour
 
         Debug.Log("LEVEL UP! O Herói alcançou o Nível " + meusAtributos.nivel + "!");
 
+        // --- MÁGICA VISUAL UNIVERSAL ---
+        if (efeitoLevelUp != null)
+        {
+            efeitoLevelUp.SetActive(true);
+            Invoke("EsconderLevelUp", 3f); // Apaga sozinho após 3 segundos
+        }
+
         // Verifica se subiu dois níveis de uma vez (casos raros de muita XP)
         GanharXP(0);
+    }
+
+    void EsconderLevelUp()
+    {
+        if (efeitoLevelUp != null) efeitoLevelUp.SetActive(false);
     }
 }

@@ -26,14 +26,7 @@ public class AtributosCombate : MonoBehaviour
     {
         CalcularStatus();
 
-        if (gameObject.CompareTag("Player") && DadosGlobais.hpAtualJogador != -1)
-        {
-            hpAtual = DadosGlobais.hpAtualJogador;
-        }
-        else
-        {
-            hpAtual = hpMaximo; // Nasce com vida cheia (Inimigos ou início de jogo)
-        }
+        hpAtual = hpMaximo;
 
         AtualizarBarra();
 
