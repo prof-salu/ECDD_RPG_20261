@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Novo Item", menuName = "Sistema RPG/Item")]
 public class DadosItem : ScriptableObject
 {
-    [Header("Identificação")]
+    [Header("Identificacao")]
     public string nomeDoItem;
     public string id;
     

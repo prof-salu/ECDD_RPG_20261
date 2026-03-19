@@ -24,7 +24,7 @@ public class CraftingSimples : MonoBehaviour
         }
         else
         {
-            Debug.Log("Falha: Você precisa de madeira!");
+            Debug.Log("Falha: Voce precisa de madeira!");
         }
     }
 }

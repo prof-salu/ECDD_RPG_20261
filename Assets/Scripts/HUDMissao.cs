@@ -3,7 +3,7 @@ using TMPro;
 
 public class HUDMissao : MonoBehaviour
 {
-    [Header("HUD da Miss�zo")]
+    [Header("HUD da Missao")]
     public TextMeshProUGUI textoTrackerQuest;
 
     void Update()

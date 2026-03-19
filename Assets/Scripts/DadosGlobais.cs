@@ -20,7 +20,6 @@ public static class DadosGlobais
 
     // --- INVENTARIO REAL ---
     public static Vector2 posicaoRetornoJogador = Vector2.zero;
-    public static int pocoesJogador = 0;
     public static int hpAtualJogador = -1;
     public static int nivelJogador = 1;
     public static int xpJogador = 0;
@@ -36,6 +35,8 @@ public static class DadosGlobais
     
     // NOVO: Bônus Permanentes comprados na Loja
     public static int bonusAtaque = 0;
-    public static int bonusVidaMax = 0;
+    public static int bonusDefesa = 0;
+    public static int precoBonusAtaque = 0;
+    public static int precoBonusDefesa = 0;
 
 }

@@ -4,26 +4,26 @@ using UnityEngine.SceneManagement;
 
 public class ControladorInimigo : MonoBehaviour
 {
-    // 1. DEFINIÇÃO DOS ESTADOS
+    // 1. DEFINICAO DOS ESTADOS
     public enum EstadoInimigo
     {
         Idle,   // Parado
         Patrulha, // Andando
-        Perseguicao   // Correndo atrás do player
+        Perseguicao   // Correndo atras do player
     }
 
-    [Header("Combate e Identificação")]
-    [Tooltip("Dê um nome único. Ex: Lobo_Floresta_03")]
+    [Header("Combate e Identificacao")]
+    [Tooltip("De um nome unico. Ex: Lobo_Floresta_03")]
     public string idUnico;
 
     [Header("Combate")]
-    [Tooltip("Arraste os PREFABS dos inimigos da aba PROJECT para cá")]
+    [Tooltip("Arraste os PREFABS dos inimigos da aba PROJECT para ca")]
     public GameObject prefabDaArena; // Substitui a antiga string 'meuNomeID'
 
     [Header("IA do Inimigo")]
     public EstadoInimigo estadoAtual;
 
-    [Header("Movimentação")]
+    [Header("Movimentacao")]
     public float velocidade = 2.0f;
     public Transform[] pontosDePatrulha;
     private int indicePontoAtual = 0;
@@ -33,19 +33,19 @@ public class ControladorInimigo : MonoBehaviour
     private float cronometroEspera = 0f; // Contador interno
 
     [Header("Sensores")]
-    public float raioVisao = 5.0f;       // Distância para começar a seguir (Vermelho)
-    public float raioPerseguicao = 8.0f; // Distância para desistir (Amarelo)
-    public float distanciaAtaque = 1.0f; // Distância para iniciar o combate (Toque)
+    public float raioVisao = 5.0f;       // Distancia para comecar a seguir (Vermelho)
+    public float raioPerseguicao = 8.0f; // Distancia para desistir (Amarelo)
+    public float distanciaAtaque = 1.0f; // Distancia para iniciar o combate (Toque)
 
 
     private Animator animator;
-    private SpriteRenderer spriteRenderer; // Necessário para o Flip
+    private SpriteRenderer spriteRenderer; // Necessario para o Flip
     private Transform transformJogador;
 
     private Rigidbody2D rb;
     private Collider2D meuCollider;
 
-    // Variáveis para a ponte entre Update e FixedUpdate
+    // Variaveis para a ponte entre Update e FixedUpdate
     private Vector2 destinoMovimento;
     private float velocidadeAtual;
     private bool estaSeMovendo = false;
@@ -59,19 +59,19 @@ public class ControladorInimigo : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         meuCollider = GetComponent<Collider2D>();
 
-        // --- BUSCA AUTOMÁTICA ---
+        // --- BUSCA AUTOMATICA ---
         // Procura na cena um objeto com a etiqueta "Player"
         GameObject objetoPlayer = GameObject.FindGameObjectWithTag("Player");
 
-        // Segurança: Só pegamos o Transform se o objeto existir
+        // Seguranca: So pegamos o Transform se o objeto existir
         if (objetoPlayer != null)
         {
             transformJogador = objetoPlayer.transform;
         }
-        // Configuração inicial dos pontos de patrulha (Container)
+        // Configuracao inicial dos pontos de patrulha (Container)
         estadoAtual = EstadoInimigo.Patrulha;
 
-        // Verifica se já foi derrotado antes de começar a patrulhar
+        // Verifica se ja foi derrotado antes de comecar a patrulhar
         if (DadosGlobais.inimigosDerrotados.Contains(idUnico))
         {
             gameObject.SetActive(false);
@@ -82,12 +82,13 @@ public class ControladorInimigo : MonoBehaviour
 
     void Update()
     {
-        estaSeMovendo = false; // Reseta todo frame. Só fica true se chamarmos MoverFisico()
+        // Reseta o frame. So fica true se chamarmos MoverFisico()
+        estaSeMovendo = false; 
 
-        // Segurança: Se o player morreu ou não foi encontrado, não faz nada
+        // Seguranca: Se o player morreu ou nao foi encontrado, nao faz nada
         if (transformJogador == null) return;
 
-        // 1. O SENSOR (Calcula a distância o tempo todo)
+        // 1. O SENSOR (Calcula a distancia o tempo todo)
         float distancia = Vector2.Distance(transform.position, transformJogador.position);
 
         switch (estadoAtual)
@@ -98,7 +99,7 @@ public class ControladorInimigo : MonoBehaviour
 
             case EstadoInimigo.Patrulha:
                 // --- REGRA 1: TE VI! ---
-                // Se o jogador entrou no círculo vermelho (Visão)...
+                // Se o jogador entrou no circulo vermelho (Visao)...
                 if (distancia < raioVisao)
                 {
                     estadoAtual = EstadoInimigo.Perseguicao;
@@ -110,7 +111,7 @@ public class ControladorInimigo : MonoBehaviour
 
             case EstadoInimigo.Perseguicao:
                 // --- REGRA 2: FUGIU! ---
-                // Se o jogador saiu do círculo amarelo (Perseguição)...
+                // Se o jogador saiu do circulo amarelo (Perseguicao)...
                 if (distancia > raioPerseguicao)
                 {
                     estadoAtual = EstadoInimigo.Patrulha;
@@ -124,7 +125,7 @@ public class ControladorInimigo : MonoBehaviour
                 }
                 else
                 {
-                    // Se ainda não pegou, corre atrás
+                    // Se ainda nao pegou, corre atras
                     Perseguir();
                 }
                 break;
@@ -133,7 +134,7 @@ public class ControladorInimigo : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Aqui o motor de física trabalha (corre em sincronia com as colisões)
+        // Aqui o motor de fisica trabalha (corre em sincronia com as colisoes)
         if (estaSeMovendo)
         {
             // NOTA: Usamos Time.fixedDeltaTime em vez de deltaTime!
@@ -142,12 +143,12 @@ public class ControladorInimigo : MonoBehaviour
         }
     }
 
-    // Esta função agora apenas "prepara" o movimento e atualiza a animação
+    // Esta funcao agora apenas "prepara" o movimento e atualiza a animacao
     void MoverFisico(Vector3 destino, float velocidadeMovimento)
     {
         Vector3 direcao = (destino - transform.position).normalized;
 
-        // Animação e Flip (Processados no Update)
+        // Animacao e Flip (Processados no Update)
         animator.SetBool("Andando", true);
         animator.SetFloat("Horizontal", direcao.x);
         animator.SetFloat("Vertical", direcao.y);
@@ -163,7 +164,7 @@ public class ControladorInimigo : MonoBehaviour
 
     void Patrulhar()
     {
-        // MODO FANTASMA: Permite atravessar paredes para não ficar preso ao voltar
+        // MODO FANTASMA: Permite atravessar paredes para nao ficar preso ao voltar
         if (meuCollider != null) meuCollider.isTrigger = true;
 
         Transform alvo = pontosDePatrulha[indicePontoAtual];
@@ -187,7 +188,7 @@ public class ControladorInimigo : MonoBehaviour
 
     void Perseguir()
     {
-        // MODO SÓLIDO: Na perseguição, bate nas paredes
+        // MODO SOLIDO: Na perseguicao, bate nas paredes
         if (meuCollider != null) meuCollider.isTrigger = false;
 
         MoverFisico(transformJogador.position, velocidade * 1.5f);
@@ -197,7 +198,7 @@ public class ControladorInimigo : MonoBehaviour
     {
         IniciadorBatalha iniciador = GetComponentInParent<IniciadorBatalha>();
 
-        // O EXTRATOR MÁGICO 1: Lê o nível do próprio AtributosCombate na cena!
+        // O EXTRATOR MAGICO 1: Le o nivel do proprio AtributosCombate na cena!
         AtributosCombate meusAtributos = GetComponent<AtributosCombate>();
         int meuNivelCena = (meusAtributos != null) ? meusAtributos.nivel : 1;
 
@@ -209,14 +210,14 @@ public class ControladorInimigo : MonoBehaviour
         }
     }
 
-    // Este método desenha na Scene do Unity automaticamente (não aparece no jogo final)
+    // Este metodo desenha na Scene do Unity automaticamente (nao aparece no jogo final)
     void OnDrawGizmosSelected()
     {
-        // Desenha o Raio de Visão (Vermelho)
+        // Desenha o Raio de Visao (Vermelho)
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, raioVisao);
 
-        // Desenha o Raio de Perseguição (Amarelo)
+        // Desenha o Raio de Perseguicao (Amarelo)
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, raioPerseguicao);
     }

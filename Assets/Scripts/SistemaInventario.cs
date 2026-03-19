@@ -9,25 +9,23 @@ public class SistemaInventario : MonoBehaviour
 
     public List<SlotInventario> inventario = new List<SlotInventario>();
 
-    public event Action onInventarioMudou;
+    public event Action OnInventarioMudou;
 
     void Awake()
     {
-        // 1. Se a memória global estiver vazia (início do jogo), salva os itens iniciais do Inspector nela
+        // 1. Se a memoria global estiver vazia (inicio do jogo), salva os itens iniciais do Inspector nela
         if (DadosGlobais.inventarioAtual.Count == 0 && inventario.Count > 0)
         {
             DadosGlobais.inventarioAtual = new List<SlotInventario>(inventario);
-            moedas = DadosGlobais.moedasJogador;
         }        
-
-        // 2. Passagem por Referência
-
         inventario = DadosGlobais.inventarioAtual;
+        
+        moedas = DadosGlobais.moedasJogador;
     }
 
     public void AdicionarItem(DadosItem itemParaAdicionar, int quantidade)
     {
-        //1. Verificar se o item é empilhavel
+        //1. Verificar se o item e empilhavel
         if (itemParaAdicionar.ehEmpilhavel)
         {
             //1.1 Verifica se a mochila possui um item desse tipo
@@ -38,9 +36,9 @@ public class SistemaInventario : MonoBehaviour
                     inventario[i].AdicionarQuantidade(quantidade);
                     Debug.Log($"Adicionado + {quantidade} ao item {itemParaAdicionar.nomeDoItem}");
 
-                    if (onInventarioMudou != null)
+                    if (OnInventarioMudou != null)
                     {
-                        onInventarioMudou.Invoke();
+                        OnInventarioMudou.Invoke();
                     }
 
                     return;
@@ -48,7 +46,7 @@ public class SistemaInventario : MonoBehaviour
             }
         }
 
-        //2. Item não empilhavel ou ainda não possui um igual
+        //2. Item nao empilhavel ou ainda nao possui um igual
         //Criando um novo slot
         SlotInventario novoSlot = new SlotInventario(itemParaAdicionar, quantidade);
 
@@ -57,9 +55,9 @@ public class SistemaInventario : MonoBehaviour
 
         Debug.Log($"Novo slot criado: {itemParaAdicionar.nomeDoItem} (x{quantidade})");
 
-        if (onInventarioMudou != null)
+        if (OnInventarioMudou != null)
         {
-            onInventarioMudou.Invoke();
+            OnInventarioMudou.Invoke();
         }
     }
      
@@ -82,9 +80,9 @@ public class SistemaInventario : MonoBehaviour
                     Debug.Log($"Item removido do inventario: {itemParaRemover.nomeDoItem}");
                 }
 
-                if (onInventarioMudou != null)
+                if (OnInventarioMudou != null)
                 {
-                    onInventarioMudou.Invoke();
+                    OnInventarioMudou.Invoke();
                 }
 
                 return;
@@ -92,7 +90,7 @@ public class SistemaInventario : MonoBehaviour
         }
     }
 
-    // Funções auxiliares para Crafting
+    // Funcoes auxiliares para Crafting
     public bool TemItem(DadosItem item, int qtdNecessaria)
     {
         foreach (SlotInventario slot in inventario)
@@ -118,38 +116,39 @@ public class SistemaInventario : MonoBehaviour
                 }
 
                 // Avisa a Interface para se redesenhar
-                if (onInventarioMudou != null) onInventarioMudou.Invoke();
+                if (OnInventarioMudou != null) OnInventarioMudou.Invoke();
 
                 return true; // Sucesso!
             }
         }
-        return false; // O jogador não tinha esse item
+        return false; // O jogador nao tinha esse item
     }
 
     public void ModificarMoedas(int valor)
     {
         moedas += valor;
+        Debug.Log("Voce encontrou " + valor + " moedas!");
         if (moedas < 0)
         {
-            moedas = 0; // Não deixa ficar negativo
+            moedas = 0; // Nao deixa ficar negativo
         }
 
         // Avisa a UI para atualizar o texto
-        if (onInventarioMudou != null) 
+        if (OnInventarioMudou != null) 
         {
-            onInventarioMudou.Invoke();
+            OnInventarioMudou.Invoke();
         };
     }
 
-    // --- MÁGICA PARA O EDITOR ---
-    // Esta função é chamada automaticamente pela Unity quando você altera
+    // --- MAGICA PARA O EDITOR ---
+    // Esta funcao e chamada automaticamente pela Unity quando voce altera
     // um valor no Inspector. Assim, podemos ver a UI mudar em tempo real!
     private void OnValidate()
     {
-        // Só executa se o jogo estiver rodando para evitar erros
-        if (Application.isPlaying && onInventarioMudou != null)
+        // So executa se o jogo estiver rodando para evitar erros
+        if (Application.isPlaying && OnInventarioMudou != null)
         {
-            onInventarioMudou.Invoke();
+            OnInventarioMudou.Invoke();
         }
     }
 }

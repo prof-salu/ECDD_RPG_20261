@@ -1,5 +1,8 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class NPCMercador : MonoBehaviour
 {
@@ -16,14 +19,28 @@ public class NPCMercador : MonoBehaviour
 
     [Header("Integração com Inventário")]
     public SistemaInventario sistemaInventario; // Para entregarmos a poção na mochila
+    public AtributosCombate atributosCombate; // Para entregarmos a poção na mochila
     public DadosItem pocaoDeVida;
     public int precoPocao = 50;
 
     private bool jogadorPerto = false;
     
     [Header("Upgrades Permanentes")]
-    public int precoAfiarEspada = 100;
-    public int precoArmadura = 150;
+    public int precoBonusAtaque = 10;
+    public int precoBonusDefesa = 5;
+
+    private void Start()
+    {
+        if (DadosGlobais.precoBonusAtaque == 0)
+        {
+            DadosGlobais.precoBonusAtaque = precoBonusAtaque;
+        }
+
+        if (DadosGlobais.precoBonusDefesa == 0)
+        {
+            DadosGlobais.precoBonusDefesa = precoBonusDefesa;
+        }
+    }
 
     void Update()
     {
@@ -34,7 +51,7 @@ public class NPCMercador : MonoBehaviour
         }
     }
 
-    public void AbrirLoja()
+    private void AbrirLoja()
     {
         painelHub.SetActive(true);
         painelCompra.SetActive(false);
@@ -60,6 +77,12 @@ public class NPCMercador : MonoBehaviour
         painelHub.SetActive(false);
         painelCompra.SetActive(false);
         painelVenda.SetActive(false);
+        
+        textoFeedbackVenda.text = "";
+        textoFeedbackCompra.text = "";
+
+        DadosGlobais.precoBonusAtaque = precoBonusAtaque;
+        DadosGlobais.precoBonusDefesa = precoBonusDefesa;
     }
 
 
@@ -67,10 +90,10 @@ public class NPCMercador : MonoBehaviour
     public void ComprarPocao()
     {
         // 1. Verifica se o jogador tem dinheiro suficiente no Banco Central (DadosGlobais)
-        if (DadosGlobais.moedasJogador >= precoPocao)
+        if (sistemaInventario.moedas >= precoPocao)
         {
             // 2. Cobra o valor
-            DadosGlobais.moedasJogador -= precoPocao;
+            sistemaInventario.ModificarMoedas(-precoPocao);
             
             // 3. Entrega o item
             sistemaInventario.AdicionarItem(pocaoDeVida, 1);
@@ -87,17 +110,19 @@ public class NPCMercador : MonoBehaviour
     }
     
     // Adicione esta função abaixo da ComprarPocao()
-    public void ComprarMelhoriaEspada()
+    public void ComprarBonusAtaque()
     {
-        if (DadosGlobais.moedasJogador >= precoAfiarEspada)
+        if (sistemaInventario.moedas >= precoBonusAtaque)
         {
-            DadosGlobais.moedasJogador -= precoAfiarEspada;
-            DadosGlobais.bonusAtaque += 10; // O herói dará +10 de dano para sempre!
+            sistemaInventario.ModificarMoedas(-precoBonusAtaque);;
+            atributosCombate.bonusAtaque += 10;
             
             // Deixa mais caro para a próxima vez (Inflação do RPG!)
-            precoAfiarEspada += 50;
+            precoBonusAtaque *= 2;
 
             textoFeedbackCompra.text = "Espada afiada! (+10 Ataque)";
+            
+            DadosGlobais.precoBonusAtaque = precoBonusAtaque;
         }
         else
         {
@@ -105,15 +130,18 @@ public class NPCMercador : MonoBehaviour
         }
     }
 
-    public void ComprarMelhoriaArmadura()
+    public void ComprarBonusDefesa()
     {
-        if (DadosGlobais.moedasJogador >= precoArmadura)
+        if (sistemaInventario.moedas >= precoBonusDefesa)
         {
-            DadosGlobais.moedasJogador -= precoArmadura;
-            DadosGlobais.bonusVidaMax += 25; // Herói terá +25 de Vida Máxima
+            sistemaInventario.ModificarMoedas(-precoBonusDefesa);
+            atributosCombate.bonusDefesa += 25;
+            //Cura o player com o valor do bonus
+            atributosCombate.hpAtual += 25;
             
-            precoArmadura += 75; 
+            precoBonusDefesa *= 2; 
             textoFeedbackCompra.text = "Armadura reforçada! (+25 Vida)";
+            DadosGlobais.precoBonusDefesa = precoBonusDefesa;
         }
         else
         {
@@ -122,7 +150,7 @@ public class NPCMercador : MonoBehaviour
     }
 
     // --- LÓGICA DE VENDA DINÂMICA ---
-    public void GerarListaDeVendas()
+    private void GerarListaDeVendas()
     {
         // 1. Destrói os botões antigos para não duplicar a lista
         foreach (Transform filho in containerVendas)
@@ -152,7 +180,7 @@ public class NPCMercador : MonoBehaviour
         int lucro = itemParaVender.valorEmOuro / 2;
 
         // 1. Atualiza o dinheiro global
-        DadosGlobais.moedasJogador += lucro;
+        sistemaInventario.ModificarMoedas(lucro);
 
         if (sistemaInventario != null)
         {

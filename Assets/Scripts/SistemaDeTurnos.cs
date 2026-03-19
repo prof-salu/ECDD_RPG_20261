@@ -11,7 +11,10 @@ public class SistemaDeTurnos : MonoBehaviour
     public EstadoBatalha estadoAtual;
     public Slider sliderHeroiUI;
 
-    private AtributosCombate atributosHeroi;
+    private GameObject jogador;
+    private AtributosCombate atributosJogador;
+    private ProgressoJogador progressoJogador;
+    private SistemaInventario inventarioJogador;
 
     // A fila de monstros vivos
     private List<AtributosCombate> inimigosVivos = new List<AtributosCombate>();
@@ -23,25 +26,18 @@ public class SistemaDeTurnos : MonoBehaviour
     {
         estadoAtual = EstadoBatalha.Preparacao;
         StartCoroutine(ConfigurarBatalha());
+        jogador = GameObject.FindGameObjectWithTag("Player");
+        atributosJogador = jogador.GetComponent<AtributosCombate>();
+        progressoJogador = jogador.GetComponent<ProgressoJogador>();
+        inventarioJogador = jogador.GetComponent<SistemaInventario>();
     }
 
     IEnumerator ConfigurarBatalha()
     {
         yield return new WaitForSeconds(0.5f);
-
-        // 1. Configura o Heroi e a sua Barra de Vida
-        atributosHeroi = GameObject.FindGameObjectWithTag("Player")
-                                                .GetComponent<AtributosCombate>();
-        atributosHeroi.minhaBarraDeVida = sliderHeroiUI;
-
-        // Aplica o bônus de vida máxima e cura o jogador
-        atributosHeroi.hpMaximo += DadosGlobais.bonusVidaMax;
-        atributosHeroi.hpAtual = atributosHeroi.hpMaximo;
-        
-        atributosHeroi.AtualizarBarra();
-        
-        // O ataque básico passa a dar mais dano graças à espada afiada!
-        atributosHeroi.danoAtual += DadosGlobais.bonusAtaque; 
+                
+        atributosJogador.minhaBarraDeVida = sliderHeroiUI;
+        atributosJogador.AtualizarBarra();
 
         // 2. Preenche a fila de inimigos procurando pela Tag
         GameObject[] objsInimigos = GameObject.FindGameObjectsWithTag("Inimigo");
@@ -62,7 +58,7 @@ public class SistemaDeTurnos : MonoBehaviour
 
         // Pega sempre o primeiro da fila
         AtributosCombate alvo = inimigosVivos[0];
-        alvo.ReceberDano(atributosHeroi.danoAtual);
+        alvo.ReceberDano(atributosJogador.danoAtual);
 
         // Se a vida dele chegou a zero, remove-o da fila
         if (alvo.hpAtual <= 0)
@@ -70,20 +66,16 @@ public class SistemaDeTurnos : MonoBehaviour
             
             // 1. Busca os novos scripts separados
             RecompensaInimigo loot = alvo.GetComponent<RecompensaInimigo>();
-            ProgressoJogador progresso = atributosHeroi.GetComponent<ProgressoJogador>();
+            ProgressoJogador progresso = atributosJogador.GetComponent<ProgressoJogador>();
 
             // 2. Transfere a recompensa
             if (loot != null && progresso != null)
             {
-                progresso.GanharXP(loot.xpDrop);
-                DadosGlobais.moedasJogador += loot.moedasDrop;
-                Debug.Log("Voc� encontrou " + loot.moedasDrop + " moedas!");
 
                 // 3. Salva as recompensas
-                DadosGlobais.xpJogador = progresso.xpAtual;
-                DadosGlobais.nivelJogador = atributosHeroi.nivel;
-
-                Debug.Log("Voc� encontrou " + loot.moedasDrop + " moedas!");
+                progresso.GanharXP(loot.xpDrop);
+                inventarioJogador.ModificarMoedas(loot.moedasDrop);
+                
 
                 // --- RASTREADOR DE MISSÕES (Caça ou Coleta) ---
                 if (DadosGlobais.questAtiva != null) 
@@ -109,19 +101,12 @@ public class SistemaDeTurnos : MonoBehaviour
 
         bool consumiuApenasUma = false;
 
-        foreach (SlotInventario slot in DadosGlobais.inventarioAtual)
+        foreach (SlotInventario slot in inventarioJogador.inventario)
         {
             if (slot.dadosDoItem == pocaoDeVida && slot.quantidade > 0)
             {
-                slot.quantidade--; // Gasta 1
+                inventarioJogador.ConsumirItem(slot.dadosDoItem);
                 consumiuApenasUma = true;
-
-                // Limpa da lista se a quantidade chegar a zero
-                if (slot.quantidade <= 0)
-                {
-                    DadosGlobais.inventarioAtual.Remove(slot);
-                }
-
                 break; // Para o loop para não gastar 2 poções de uma vez!
             }
         }
@@ -129,7 +114,7 @@ public class SistemaDeTurnos : MonoBehaviour
         // 2. Aplica a cura se o jogador tinha a poção!
         if (consumiuApenasUma)
         {
-            atributosHeroi.Curar(50);     // Cura
+            atributosJogador.Curar(50);     // Cura
             Debug.Log("Você bebeu a poção deliciosa!");
             VerificarFimDeTurnoJogador(); // Passa o turno
         }
@@ -141,7 +126,7 @@ public class SistemaDeTurnos : MonoBehaviour
 
     void VerificarFimDeTurnoJogador()
     {
-        // Se a fila de inimigos ficou vazia, o Her�i ganhou!
+        // Se a fila de inimigos ficou vazia, o Heroi ganhou!
         if (inimigosVivos.Count == 0)
         {
             estadoAtual = EstadoBatalha.Vitoria;
@@ -149,7 +134,7 @@ public class SistemaDeTurnos : MonoBehaviour
         }
         else
         {
-            // Se ainda h� monstros, passa-lhes a vez
+            // Se ainda ha monstros, passa-lhes a vez
             estadoAtual = EstadoBatalha.TurnoInimigo;
             StartCoroutine(TurnoDoInimigo());
         }
@@ -161,14 +146,14 @@ public class SistemaDeTurnos : MonoBehaviour
         foreach (AtributosCombate inimigo in inimigosVivos)
         {
             yield return new WaitForSeconds(1f);
-            atributosHeroi.ReceberDano(inimigo.danoBase);
+            atributosJogador.ReceberDano(inimigo.danoBase);
 
-            // Se o her�i morrer a meio dos ataques inimigos, para o ciclo imediatamente
-            if (atributosHeroi.hpAtual <= 0) break;
+            // Se o heroi morrer a meio dos ataques inimigos, para o ciclo imediatamente
+            if (atributosJogador.hpAtual <= 0) break;
         }
 
-        // Verifica se o her�i sobreviveu � rodada
-        if (atributosHeroi.hpAtual <= 0)
+        // Verifica se o heroi sobreviveu a rodada
+        if (atributosJogador.hpAtual <= 0)
         {
             estadoAtual = EstadoBatalha.Derrota;
             StartCoroutine(FinalizarBatalha(false));
@@ -181,27 +166,11 @@ public class SistemaDeTurnos : MonoBehaviour
 
     IEnumerator FinalizarBatalha(bool jogadorVenceu)
     {
-        // SALVANDO A VIDA: O Her�i vai para o mapa com as feridas da batalha!
-        if (atributosHeroi != null)
-        {
-            // 1. Puxa os dados corretos dos componentes atualizados do Her�i
-            ProgressoJogador progresso = atributosHeroi.GetComponent<ProgressoJogador>();
-
-            // 2. Salva Vida e N�vel
-            DadosGlobais.hpAtualJogador = atributosHeroi.hpAtual;
-            DadosGlobais.nivelJogador = atributosHeroi.nivel;
-
-            if (progresso != null)
-            {
-                DadosGlobais.xpJogador = progresso.xpAtual;
-            }
-        }
-
-        yield return new WaitForSeconds(2f);
-
         if (jogadorVenceu) 
         {
-            // O CEMIT�RIO: Anota o ID do monstro para ele n�o voltar!
+            IniciadorBatalha.SalvarDadosJogador(jogador);
+            yield return new WaitForSeconds(2f);
+            // O CEMITERIO: Anota o ID do monstro para ele nao voltar!
             DadosGlobais.inimigosDerrotados.Add(DadosGlobais.idInimigoEmCombate);
             SceneManager.LoadScene("Mundo"); 
         }

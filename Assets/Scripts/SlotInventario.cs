@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[System.Serializable] //OBRIGATÓRIO para visualizar no Inspector
+[System.Serializable] //OBRIGATORIO para visualizar no Inspector
 public class SlotInventario
 {
     public DadosItem dadosDoItem;

@@ -7,7 +7,7 @@ public class MovimentacaoExploracao : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 movimento;
     private SpriteRenderer spriteRenderer;
-    private Animator anim; // Para a animação no Passo 5
+    private Animator anim; // Para a animacao no Passo 5
 
     void Start()
     {
@@ -15,7 +15,7 @@ public class MovimentacaoExploracao : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
 
-        //Posição inicial do jogador
+        //Posicao inicial do jogador
         if (DadosGlobais.posicaoRetornoJogador != Vector2.zero)
         {
             transform.position = DadosGlobais.posicaoRetornoJogador;
@@ -29,7 +29,7 @@ public class MovimentacaoExploracao : MonoBehaviour
         movimento.x = Input.GetAxisRaw("Horizontal");
         movimento.y = Input.GetAxisRaw("Vertical");
 
-        // 2. Controle da Animação
+        // 2. Controle da Animacao
         if (movimento != Vector2.zero)
         {
             // Diz para o Animator para onde estamos olhando
@@ -37,13 +37,13 @@ public class MovimentacaoExploracao : MonoBehaviour
             anim.SetFloat("Vertical", movimento.y);
             anim.SetBool("Andando", true);
 
-            // --- LÓGICA DE ESPELHAMENTO (FLIP) ---
-            // Como o nosso boneco só tem desenho olhando para a DIREITA,
-            // precisamos inverte-lo via código quando ele vai para a ESQUERDA.
+            // --- LOGICA DE ESPELHAMENTO (FLIP) ---
+            // Como o nosso boneco so tem desenho olhando para a DIREITA,
+            // precisamos inverte-lo via codigo quando ele vai para a ESQUERDA.
 
             if (movimento.x > 0)
             {
-                // Indo para a Direita -> Normal (Não inverte)
+                // Indo para a Direita -> Normal (Nao inverte)
                 spriteRenderer.flipX = false;
             }
             else if (movimento.x < 0)
@@ -60,9 +60,9 @@ public class MovimentacaoExploracao : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 3. Aplica a Física
-        // MovePosition é mais seguro que Translate para evitar atravessar paredes.
-        // .normalized garante que andar na diagonal não seja mais rápido.
+        // 3. Aplica a Fisica
+        // MovePosition e mais seguro que Translate para evitar atravessar paredes.
+        // .normalized garante que andar na diagonal nao seja mais rapido.
         rb.MovePosition(rb.position + movimento.normalized * velocidade * Time.fixedDeltaTime);
     }
 }

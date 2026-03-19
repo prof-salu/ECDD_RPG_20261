@@ -26,8 +26,8 @@ public class Quest : ScriptableObject
     public string nomeItemColeta; 
 
     [Header("Recompensas")]
-    public int recompensaOuro;
-    public int recompensaXP;
+    public int recompensaOuro = 0;
+    public int recompensaXP = 0;
 
     [Header("A Sequência (Questline)")]
     [Tooltip("A missão que ficará disponível APÓS terminar esta. Deixe vazio se for a última!")]

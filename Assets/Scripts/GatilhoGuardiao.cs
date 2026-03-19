@@ -4,8 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class GatilhoGuardiao : MonoBehaviour
 {
-    [Header("Identificação")]
-    [Tooltip("Dê um nome único. Ex: Guardiao_Ponte_01")]
+    [Header("Identificacao")]
+    [Tooltip("De um nome unico. Ex: Guardiao_Ponte_01")]
     public string idUnico;
     public List<GameObject> inimigosDesteGrupo;
 
@@ -14,7 +14,7 @@ public class GatilhoGuardiao : MonoBehaviour
         // Verifica a lista de mortos!
         if (DadosGlobais.inimigosDerrotados.Contains(idUnico))
         {
-            gameObject.SetActive(false); // Desaparece se já foi derrotado!
+            gameObject.SetActive(false); // Desaparece se ja foi derrotado!
         }
     }
 
@@ -24,7 +24,7 @@ public class GatilhoGuardiao : MonoBehaviour
         {
             IniciadorBatalha iniciador = GetComponent<IniciadorBatalha>();
 
-            // O EXTRATOR MÁGICO 2: Procura nos "filhos" visuais da floresta o nível deles!
+            // O EXTRATOR MAGICO 2: Procura nos "filhos" visuais da floresta o nivel deles!
             List<int> niveisExtraidos = new List<int>();
             AtributosCombate[] inimigosNaCena = GetComponentsInChildren<AtributosCombate>();
 
@@ -33,7 +33,7 @@ public class GatilhoGuardiao : MonoBehaviour
                 niveisExtraidos.Add(inimigo.nivel);
             }
 
-            // Segurança: Se o designer esqueceu de colocar o script no modelo, preenche com Nível 1
+            // Seguranca: Se o designer esqueceu de colocar o script no modelo, preenche com Nivel 1
             while (niveisExtraidos.Count < inimigosDesteGrupo.Count)
             {
                 niveisExtraidos.Add(1);

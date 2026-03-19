@@ -22,7 +22,7 @@ public class TesteInventario : MonoBehaviour
         inventario.AdicionarItem(espada, 1);
 
         // 2. Acha um escudo
-        Debug.Log("--- O JOGADOR ABRIU UM BAÚ DOURADO! ---");
+        Debug.Log("--- O JOGADOR ABRIU UM BAU DOURADO! ---");
         inventario.AdicionarItem(escudo, 1);
     }
 }

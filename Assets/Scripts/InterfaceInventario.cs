@@ -4,40 +4,39 @@ using TMPro;
 
 public class InterfaceInventario : MonoBehaviour
 {
-    public SistemaInventario sistemaInventario; // Referência ao cérebro (Semana 01)
+    public SistemaInventario sistemaInventario; // Referencia ao cerebro (Semana 01)
     public Transform containerDoGrid;         // O objeto que tem o Grid Layout
     public GameObject prefabSlot;             // O desenho do slot que criamos
 
     [Header("Economia UI")]
-    public TextMeshProUGUI textoMoedas; // Referência ao texto de Ouro
+    public TextMeshProUGUI textoMoedas; // Referencia ao texto de Ouro
 
 
     void Start()
     {
-       // Sempre que o inventário mudar, a interface se redesenha automaticamente.
-        sistemaInventario.onInventarioMudou += AtualizarInterface;
+       // Sempre que o inventario mudar, a interface se redesenha automaticamente.
+        sistemaInventario.OnInventarioMudou += AtualizarInterface;
 
         AtualizarInterface(); // Atualiza a primeira vez ao iniciar
     }
 
     void Update()
     {
-        // NOVO: O Inventário agora lê a fortuna global do jogador o tempo todo!
         if (textoMoedas != null)
         {
-            textoMoedas.text = "Ouro: " + DadosGlobais.moedasJogador.ToString();
+            textoMoedas.text = "Ouro: " + sistemaInventario.moedas.ToString();
         }
     }
 
 
-    public void AtualizarInterface()
+    private void AtualizarInterface()
     {
         foreach (Transform filho in containerDoGrid)
         {
             Destroy(filho.gameObject);
         }
 
-        // 3. Reconstrução: Cria um slot novo para cada item na lista de dados
+        // 3. Reconstrucao: Cria um slot novo para cada item na lista de dados
         foreach (SlotInventario slot in sistemaInventario.inventario)
         {
             // Instancia o desenho dentro do Grid

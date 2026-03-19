@@ -9,7 +9,7 @@ public class GerenciadorBatalha : MonoBehaviour
 
     void Start()
     {
-        // 1. Cria o Herói e desliga o script de exploração
+        // 1. Cria o Heroi e desliga o script de exploracao
         GameObject heroi = Instantiate(prefabHeroi, pontoHeroi.position, Quaternion.identity);
 
         if (heroi.GetComponent<MovimentacaoExploracao>() != null)
@@ -22,13 +22,13 @@ public class GerenciadorBatalha : MonoBehaviour
 
             GameObject monstroCriado = Instantiate(DadosGlobais.prefabsInimigos[i], pontosInimigos[i].position, Quaternion.identity);
 
-            // A INJEÇÃO DE DADOS: Pega a lista do DadosGlobais e aplica no monstro
+            // A INJECAO DE DADOS: Pega a lista do DadosGlobais e aplica no monstro
             AtributosCombate atributos = monstroCriado.GetComponent<AtributosCombate>();
             if (atributos != null && i < DadosGlobais.niveisInimigosParaArena.Count)
             {
                 atributos.nivel = DadosGlobais.niveisInimigosParaArena[i];
 
-                // Força o monstro a recalcular a sua força imediatamente com o novo nível
+                // Forca o monstro a recalcular a sua forca imediatamente com o novo nivel
                 atributos.CalcularStatus();
 
                 atributos.hpAtual = atributos.hpMaximo;

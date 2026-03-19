@@ -119,7 +119,8 @@ public class NPCQuest : MonoBehaviour
 
     void EntregarRecompensa(Quest questConcluida)
     {
-        DadosGlobais.moedasJogador += questConcluida.recompensaOuro;
+        jogadorRef.GetComponent<ProgressoJogador>().GanharXP(questConcluida.recompensaXP);
+        jogadorRef.GetComponent<SistemaInventario>().ModificarMoedas(questConcluida.recompensaOuro);
         
         // A Mágica: A próxima quest é liberada!
         DadosGlobais.questAtiva = null; 

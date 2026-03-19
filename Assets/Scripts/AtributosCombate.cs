@@ -5,38 +5,40 @@ public class AtributosCombate : MonoBehaviour
 {
     public string nomePersonagem;
     
-    [Header("N�vel do Personagem")]
-    [Tooltip("Her�i come�a no 1. Para inimigos, defina a dificuldade manual!")]
+    [Header("Nível do Personagem")]
+    [Tooltip("Herói começa no 1. Para inimigos, defina a dificuldade manual!")]
     public int nivel = 1; 
 
-    [Header("Status Base (No N�vel 1)")]
+    [Header("Status Base (No Nível 1)")]
     public int hpBase = 100;
     public int danoBase = 10;
     
-    [Header("Status Calculados (N�o Mexer)")]
+    [Header("Status Calculados (Não Mexer)")]
     public int hpMaximo;
     public int hpAtual;
     public int danoAtual;
+
+    [Header("Bonus (UPGRADES)")] 
+    public int bonusAtaque = 0;
+    public int bonusDefesa = 0;
+    
 
     [Header("UI")]
     public Slider minhaBarraDeVida;
 
 
-    void Start() 
+    // A MÁGICA: O Awake roda ANTES de todos os Starts do jogo!
+    // Assim, nós garantimos que a Vida Máxima é o padrão, mas deixamos
+    // caminho livre para o ProgressoJogador substituir este valor no Start (Load).
+    void Awake() 
     {
         CalcularStatus();
+        hpAtual = hpMaximo; 
+    }
 
-        if (gameObject.CompareTag("Player") && DadosGlobais.hpAtualJogador != -1)
-        {
-            hpAtual = DadosGlobais.hpAtualJogador;
-        }
-        else
-        {
-            hpAtual = hpMaximo; // Nasce com vida cheia (Inimigos ou in�cio de jogo)
-        }
-
+    void Start()
+    {
         AtualizarBarra();
-
     }
 
     public void ReceberDano(int valorDano)
@@ -60,7 +62,7 @@ public class AtributosCombate : MonoBehaviour
 
         Debug.Log(nomePersonagem + " recebeu " + valorCura + " de cura! HP: " + hpAtual);
 
-        // Impede que a vida ultrapasse o m�ximo!
+        // Impede que a vida ultrapasse o máximo!
         if (hpAtual > hpMaximo) hpAtual = hpMaximo;
 
         AtualizarBarra();
@@ -77,9 +79,9 @@ public class AtributosCombate : MonoBehaviour
 
     public void CalcularStatus()
     {
-        // A matem�tica da evolu��o: Ganha +20 HP e +5 Dano por cada n�vel extra!
-        hpMaximo = hpBase + ((nivel - 1) * 20);
-        danoAtual = danoBase + ((nivel - 1) * 5);
+        // A matemática da evolução: Ganha +20 HP e +5 Dano por cada nível extra!
+        hpMaximo = hpBase + ((nivel - 1) * 20) + bonusDefesa;
+        danoAtual = danoBase + ((nivel - 1) * 5) + bonusAtaque;
 
         if (hpAtual > hpMaximo) hpAtual = hpMaximo;
 
