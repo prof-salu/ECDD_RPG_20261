@@ -148,6 +148,12 @@ public class SistemaDeTurnos : MonoBehaviour
             yield return new WaitForSeconds(1f);
             atributosJogador.ReceberDano(inimigo.danoBase);
 
+            // NOVO: Faz a camera tremer um pouquinho (Dura 0.2 segundos com força de 0.1)
+            if (EfeitoCamera.instancia != null)
+            {
+                EfeitoCamera.instancia.TremerTela(0.2f, 0.1f);
+            }
+
             // Se o heroi morrer a meio dos ataques inimigos, para o ciclo imediatamente
             if (atributosJogador.hpAtual <= 0) break;
         }

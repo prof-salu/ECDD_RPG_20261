@@ -25,9 +25,13 @@ public class NPCMercador : MonoBehaviour
 
     private bool jogadorPerto = false;
     
-    [Header("Upgrades Permanentes")]
+    [Header("Valor Upgrades")]
     public int precoBonusAtaque = 10;
     public int precoBonusDefesa = 5;
+
+    [Header("Bonus Upgrades")]
+    public int bonusAtaque = 5;
+    public int bonusDefesa = 10;
 
     private void Start()
     {
@@ -115,12 +119,12 @@ public class NPCMercador : MonoBehaviour
         if (sistemaInventario.moedas >= precoBonusAtaque)
         {
             sistemaInventario.ModificarMoedas(-precoBonusAtaque);;
-            atributosCombate.bonusAtaque += 10;
+            atributosCombate.bonusAtaque += bonusAtaque;
             
             // Deixa mais caro para a próxima vez (Inflação do RPG!)
             precoBonusAtaque *= 2;
 
-            textoFeedbackCompra.text = "Espada afiada! (+10 Ataque)";
+            textoFeedbackCompra.text = $"Espada afiada! (+{bonusAtaque} de ataque)";
             
             DadosGlobais.precoBonusAtaque = precoBonusAtaque;
         }
@@ -135,12 +139,12 @@ public class NPCMercador : MonoBehaviour
         if (sistemaInventario.moedas >= precoBonusDefesa)
         {
             sistemaInventario.ModificarMoedas(-precoBonusDefesa);
-            atributosCombate.bonusDefesa += 25;
+            atributosCombate.bonusDefesa += bonusDefesa;
             //Cura o player com o valor do bonus
             atributosCombate.hpAtual += 25;
             
             precoBonusDefesa *= 2; 
-            textoFeedbackCompra.text = "Armadura reforçada! (+25 Vida)";
+            textoFeedbackCompra.text = $"Armadura reforçada! (+{bonusDefesa} de Vida)";
             DadosGlobais.precoBonusDefesa = precoBonusDefesa;
         }
         else
@@ -159,7 +163,7 @@ public class NPCMercador : MonoBehaviour
         }
 
         // 2. Vasculha a Memória Global
-        foreach (SlotInventario slot in DadosGlobais.inventarioAtual)
+        foreach (SlotInventario slot in sistemaInventario.inventario)
         {
             // Só cria o botão se a metade do valor do item for pelo menos 1 (item.valor >= 2)
             if (slot.dadosDoItem.valorEmOuro >= 2 && slot.quantidade > 0)

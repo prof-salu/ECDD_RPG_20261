@@ -39,4 +39,31 @@ public static class DadosGlobais
     public static int precoBonusAtaque = 0;
     public static int precoBonusDefesa = 0;
 
+    // ==========================================
+    // LIMPEZA DE MEMÓRIA (RESET DA SESSÃO)
+    // ==========================================
+    public static void ResetarJogoNovo()
+    {
+        moedasJogador = 0;
+        nivelJogador = 1;
+        xpJogador = 0;
+        hpAtualJogador = -1; // -1 indica que vai pegar o HP Base ao nascer
+
+        bonusAtaque = 0;
+        bonusDefesa = 0;
+
+        inventarioAtual.Clear();
+        inimigosDerrotados.Clear();
+
+        posicaoRetornoJogador = Vector2.zero;
+
+        // Se usar Quests:
+        questAtiva = null;
+        questDisponivel = null;
+        progressoQuestAtual = 0;
+        historiaConcluida = false;
+
+        Debug.Log("DadosGlobais: Memória limpa. Pronto para um Novo Jogo!");
+    }
+
 }

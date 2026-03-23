@@ -44,7 +44,7 @@ public class AtributosCombate : MonoBehaviour
     public void ReceberDano(int valorDano)
     {
         hpAtual -= valorDano;
-        
+
         Debug.Log(nomePersonagem + " recebeu " + valorDano + " de dano! HP: " + hpAtual);
 
         if (hpAtual <= 0)
