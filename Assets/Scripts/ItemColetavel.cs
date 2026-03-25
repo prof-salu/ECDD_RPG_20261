@@ -4,8 +4,10 @@ public class ItemColetavel : MonoBehaviour
 {
     public DadosItem itemParaDar; // Qual ScriptableObject e esse?
     public int quantidade = 1;
+    public AudioClip somColeta;
 
     private SpriteRenderer spriteRenderer;
+
 
     void Start()
     {
@@ -30,6 +32,7 @@ public class ItemColetavel : MonoBehaviour
             if (inventario != null)
             {
                 inventario.AdicionarItem(itemParaDar, quantidade);
+                GerenciadorDeAudio.instancia.TocarSFX(somColeta);
                 Destroy(gameObject); // O item some do mundo
             }
         }

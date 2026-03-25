@@ -6,12 +6,15 @@ public class MoedaColetavel : MonoBehaviour
     [Tooltip("Quantidade de ouro que esta moeda vale ao ser coletada")]
     public int valor = 1; // Quanto vale essa moeda?
 
+    public AudioClip somMoeda;
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         // Se quem encostou na moeda tem a tag "Player" (o Heroi)
         if (collision.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<SistemaInventario>().ModificarMoedas(valor);
+            GerenciadorDeAudio.instancia.TocarSFX(somMoeda);
             Destroy(gameObject);
         }
     }
